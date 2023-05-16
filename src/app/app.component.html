@@ -1,5 +1,230 @@
-<p>
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" opened>
+    <mat-card class="example-card">
+      <img
+        src="./../assets/img/logo2SinBg.png"
+        alt="Logo Hospital Hipolito Unanue"
+      />
+    </mat-card>
+    <mat-list role="list">
+      <mat-list-item role="listitem">
+        <button
+          mat-icon-button
+          class="example-icon favorite-icon"
+          aria-label="Example icon-button with heart icon"
+        >
+          <mat-icon>search</mat-icon>
+          Buscar
+        </button>
+      </mat-list-item>
+      <mat-list-item role="listitem">Otras Opciones</mat-list-item>
+    </mat-list>
+  </mat-drawer>
+
   <mat-toolbar>
-    <span>My Application</span>
+    <div class="example-sidenav-content">
+      <button type="button" mat-button (click)="drawer.toggle()">
+        <button
+          mat-icon-button
+          class="example-icon"
+          aria-label="Example icon-button with menu icon"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </button>
+    </div>
+    <span>Inicio</span>
+    <span class="example-spacer"></span>
+    <button mat-button [matMenuTriggerFor]="menu">Leonardo</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item>Item 2</button>
+    </mat-menu>
   </mat-toolbar>
-</p>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Favoritos</mat-card-title>
+    </mat-card-header>
+    <mat-chip-listbox aria-label="Dog selection">
+      <mat-chip>
+        <img
+          matChipAvatar
+          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+        Dog one
+      </mat-chip>
+      <mat-chip color="primary">
+        <img
+          matChipAvatar
+          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+        Dog two
+      </mat-chip>
+      <mat-chip color="accent">
+        <img
+          matChipAvatar
+          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+        Dog three
+      </mat-chip>
+    </mat-chip-listbox>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Recurrentes</mat-card-title>
+    </mat-card-header>
+    <mat-chip-listbox aria-label="Dog selection">
+      <mat-chip>
+        <img
+          matChipAvatar
+          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+        Dog one
+      </mat-chip>
+      <mat-chip color="primary">
+        <img
+          matChipAvatar
+          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+        Dog two
+      </mat-chip>
+      <mat-chip color="accent">
+        <img
+          matChipAvatar
+          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+        Dog three
+      </mat-chip>
+    </mat-chip-listbox>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>MI TRABAJO</mat-card-title>
+    </mat-card-header>
+
+    <mat-tab-group>
+      <mat-tab label="Pendientes">
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <!-- This is the tree node template for leaf nodes -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <button mat-icon-button disabled></button>
+            {{ node.name }}
+          </mat-tree-node>
+          <!-- This is the tree node template for expandable nodes -->
+          <mat-tree-node
+            *matTreeNodeDef="let node; when: hasChild"
+            matTreeNodePadding
+          >
+            <button
+              mat-icon-button
+              matTreeNodeToggle
+              [attr.aria-label]="'Toggle ' + node.name"
+            >
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{
+                  treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
+                }}
+              </mat-icon>
+            </button>
+            {{ node.name }}
+          </mat-tree-node>
+        </mat-tree>
+
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Vencidos</mat-card-title>
+            <mat-list role="list">
+              <mat-list-item role="listitem">
+                <mat-card>
+                  <mat-list-item>
+                    <span matListItemLine>Title</span>
+                    <span matListItemTitle>Second line</span>
+                  </mat-list-item>
+                </mat-card>
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                <mat-list-item>
+                  <span matListItemLine>Title</span>
+                  <span matListItemTitle>Second line</span>
+                </mat-list-item>
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                <mat-list-item>
+                  <span matListItemLine>Title</span>
+                  <span matListItemTitle>Second line</span>
+                </mat-list-item>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-header>
+        </mat-card>
+
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Siguiente</mat-card-title>
+            <mat-list role="list">
+              <mat-list-item role="listitem">
+                <mat-card>
+                  <mat-list-item>
+                    <span matListItemLine>Title</span>
+                    <span matListItemTitle>Second line</span>
+                  </mat-list-item>
+                </mat-card>
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                <mat-list-item>
+                  <span matListItemLine>Title</span>
+                  <span matListItemTitle>Second line</span>
+                </mat-list-item>
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                <mat-list-item>
+                  <span matListItemLine>Title</span>
+                  <span matListItemTitle>Second line</span>
+                </mat-list-item>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-header>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Terminados">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Siguiente</mat-card-title>
+            <mat-list role="list">
+              <mat-list-item role="listitem">
+                <mat-card>
+                  <mat-list-item>
+                    <span matListItemLine>Title</span>
+                    <span matListItemTitle>Second line</span>
+                  </mat-list-item>
+                </mat-card>
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                <mat-list-item>
+                  <span matListItemLine>Title</span>
+                  <span matListItemTitle>Second line</span>
+                </mat-list-item>
+              </mat-list-item>
+              <mat-list-item role="listitem">
+                <mat-list-item>
+                  <span matListItemLine>Title</span>
+                  <span matListItemTitle>Second line</span>
+                </mat-list-item>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-header>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</mat-drawer-container>

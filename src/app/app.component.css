@@ -1,0 +1,29 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.example-container {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+}
+
+.example-card {
+  max-width: 150px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
