@@ -1,0 +1,42 @@
+<router-outlet></router-outlet>
+
+<div class="example-header">
+    <mat-form-field style="display:block">
+        <input matInput (keyup)="filtrar($event)" placeholder="Buscar Estado Atencion">
+    </mat-form-field>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+  <ng-container matColumnDef="estado_atencion_id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+    <td mat-cell *matCellDef="let element"> {{element.estado_atencion_id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nombreEstadoAtencion">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+    <td mat-cell *matCellDef="let element"> {{element.nombreEstadoAtencion}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button color="primary" [routerLink]="['edicion',element.estado_atencion_id]">
+        <mat-icon>ballot</mat-icon>
+      </button>
+      <button mat-button color="primary">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+<button mat-fab color="accent" style="float: right" routerLink="/pages/estadoAtencion/nuevo" >
+    <mat-icon>add</mat-icon>
+</button>
