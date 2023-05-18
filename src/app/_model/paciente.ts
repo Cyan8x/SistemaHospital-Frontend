@@ -1,3 +1,5 @@
+import { EstadoAtencion } from "./estadoAtencion";
+
 export class Paciente {
   paciente_id: number;
   nombresPaciente: string;
@@ -6,4 +8,5 @@ export class Paciente {
   direccionPaciente: string;
   emailPaciente: string;
   telefonoPaciente: string;
+  estadoAtencion: EstadoAtencion;
 }

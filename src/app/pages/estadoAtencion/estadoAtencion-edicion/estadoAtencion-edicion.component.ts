@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 
@@ -16,7 +17,7 @@ export class EstadoAtencionEdicionComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router : Router,
+    private router: Router,
     private estadoAtencionService: EstadoAtencionService
   ) {}
 
@@ -45,26 +46,51 @@ export class EstadoAtencionEdicionComponent implements OnInit {
   }
 
   operar() {
-    let estadoAtencion = new EstadoAtencion;
+    let estadoAtencion = new EstadoAtencion();
     estadoAtencion.estado_atencion_id = this.form.value['id'];
     estadoAtencion.nombreEstadoAtencion = this.form.value['nombres'];
 
     if (this.edicion) {
       //MODIFICAR
-      this.estadoAtencionService.modificar(estadoAtencion).subscribe(() =>{
-        this.estadoAtencionService.listar().subscribe(data=>{
-          this.estadoAtencionService.estadoAtencionCambio.next(data);
-          this.estadoAtencionService.mensajeCambio.next('Se modificó.');
+      // this.estadoAtencionService.modificar(estadoAtencion).subscribe(() => {
+      //   this.estadoAtencionService.listar().subscribe((data) => {
+      //     this.estadoAtencionService.estadoAtencionCambio.next(data);
+      //     this.estadoAtencionService.mensajeCambio.next('Se modificó.');
+      //   });
+
+      //FORMA IDEAL
+      this.estadoAtencionService
+        .modificar(estadoAtencion)
+        .pipe(
+          switchMap(() => {
+            return this.estadoAtencionService.listar();
+          })
+        )
+        .subscribe((data) => {
+          this.estadoAtencionService.setEstadoAtencionCambio(data);
+          this.estadoAtencionService.setMensajeCambio('Se modificó.');
         });
-      });
     } else {
       //REGISTRAR
-      this.estadoAtencionService.registrar(estadoAtencion).subscribe(() =>{
-        this.estadoAtencionService.listar().subscribe(data=>{
-          this.estadoAtencionService.estadoAtencionCambio.next(data);
-          this.estadoAtencionService.mensajeCambio.next('Se registró.');
+      // this.estadoAtencionService.registrar(estadoAtencion).subscribe(() => {
+      //   this.estadoAtencionService.listar().subscribe((data) => {
+      //     this.estadoAtencionService.setEstadoAtencionCambio(data);
+      //     this.estadoAtencionService.setMensajeCambio('Se registró.');
+      //   });
+      // });
+
+      //FORMA IDEAL
+      this.estadoAtencionService
+        .registrar(estadoAtencion)
+        .pipe(
+          switchMap(() => {
+            return this.estadoAtencionService.listar();
+          })
+        )
+        .subscribe((data) => {
+          this.estadoAtencionService.setEstadoAtencionCambio(data);
+          this.estadoAtencionService.setMensajeCambio('Se registró.');
         });
-      });
     }
 
     this.router.navigate(['/pages/estadoAtencion']);

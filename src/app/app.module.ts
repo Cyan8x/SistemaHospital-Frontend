@@ -7,17 +7,17 @@ import { MaterialModule } from './material/material.module';
 import { PacienteComponent } from './pages/paciente/paciente.component';
 import { EstadoAtencionComponent } from './pages/estadoAtencion/estadoAtencion.component';
 import { HttpClientModule } from '@angular/common/http';
-import { PacienteEdicionComponent } from './pages/paciente/paciente-edicion/paciente-edicion.component';
 import { EstadoAtencionEdicionComponent } from './pages/estadoAtencion/estadoAtencion-edicion/estadoAtencion-edicion.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PacienteDialogComponent } from './pages/paciente/paciente-dialog/paciente-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PacienteComponent,
     EstadoAtencionComponent,
-    PacienteEdicionComponent,
-    EstadoAtencionEdicionComponent
+    EstadoAtencionEdicionComponent,
+    PacienteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule, //Formularios
+    FormsModule //Two Way Biding
   ],
   providers: [],
   bootstrap: [AppComponent]

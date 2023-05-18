@@ -3,34 +3,58 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { EstadoAtencion } from '../_model/estadoAtencion';
 import { Subject } from 'rxjs';
+import { GenericService } from './generic.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EstadoAtencionService {
-  estadoAtencionCambio: Subject<EstadoAtencion[]> = new Subject<EstadoAtencion[]>();
-  mensajeCambio: Subject<string> = new Subject<string>();
-  private url: string = `${environment.HOST}/estadoatencion`;
+export class EstadoAtencionService extends GenericService<EstadoAtencion> {
+  private estadoAtencionCambio: Subject<EstadoAtencion[]> = new Subject<
+    EstadoAtencion[]
+  >();
+  private mensajeCambio: Subject<string> = new Subject<string>();
 
-  constructor(private http: HttpClient) {}
-
-  listar() {
-    return this.http.get<EstadoAtencion[]>(this.url);
+  constructor(protected override http: HttpClient) {
+    super(http, `${environment.HOST}/estadoatencion`);
   }
 
-  listarPorId(id: number) {
-    return this.http.get<EstadoAtencion>(`${this.url}/${id}`);
+  // private url: string = `${environment.HOST}/estadoatencion`;
+
+  // constructor(private http: HttpClient) {}
+
+  // listar() {
+  //   return this.http.get<EstadoAtencion[]>(this.url);
+  // }
+
+  // listarPorId(id: number) {
+  //   return this.http.get<EstadoAtencion>(`${this.url}/${id}`);
+  // }
+
+  // registrar(estado_atencion: EstadoAtencion) {
+  //   return this.http.post(this.url, estado_atencion);
+  // }
+
+  // modificar(estado_atencion: EstadoAtencion) {
+  //   return this.http.put(this.url, estado_atencion);
+  // }
+
+  // delete(id: number) {
+  //   return this.http.delete(`${this.url}/${id}`);
+  // }
+
+  getEstadoAtencionCambio() {
+    return this.estadoAtencionCambio.asObservable();
   }
 
-  registrar(estado_atencion: EstadoAtencion) {
-    return this.http.post(this.url, estado_atencion);
+  setEstadoAtencionCambio(estadoAtencion: EstadoAtencion[]) {
+    this.estadoAtencionCambio.next(estadoAtencion);
   }
 
-  modificar(estado_atencion: EstadoAtencion) {
-    return this.http.put(this.url, estado_atencion);
+  getMensajeCambio() {
+    return this.mensajeCambio.asObservable();
   }
 
-  delete(id: number) {
-    return this.http.delete(`${this.url}/${id}`);
+  setMensajeCambio(mensaje: string) {
+    this.mensajeCambio.next(mensaje);
   }
 }

@@ -1,0 +1,50 @@
+<div>
+  <mat-form-field>
+    <input matInput placeholder="Nombre del Paciente" minlength="3" required [(ngModel)]="paciente.nombresPaciente">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Apellidos del Paciente" minlength="3" required
+      [(ngModel)]="paciente.apellidosPaciente">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="DNI del Paciente" minlength="3" required [(ngModel)]="paciente.dniPaciente">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Direccion del Paciente" minlength="3" required
+      [(ngModel)]="paciente.direccionPaciente">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Email del Paciente" minlength="3" required [(ngModel)]="paciente.emailPaciente">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Telefono del Paciente" minlength="3" required [(ngModel)]="paciente.telefonoPaciente">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Estado del Paciente" minlength="3" required
+      [(ngModel)]="paciente.estadoAtencion.nombreEstadoAtencion">
+  </mat-form-field>
+
+  <h4>Seleccione un estado</h4>
+  <mat-form-field>
+    <mat-label>Estado</mat-label>
+    <mat-select [(ngModel)]="opcionSeleccionado" (change)="selectEstado()">
+      <mat-option></mat-option>
+      <mat-option *ngFor="let option of estadoAtencion" [value]="option.estado_atencion_id">{{option.nombreEstadoAtencion }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<button mat-raised-button color="primary" (click)="operar()">
+  <mat-icon>done</mat-icon>
+  <span>Aceptar</span>
+</button>
+<button mat-raised-button color="accent" (click)="cerrar()">
+  <mat-icon>close</mat-icon>
+  <span>Cancelar</span>
+</button>
