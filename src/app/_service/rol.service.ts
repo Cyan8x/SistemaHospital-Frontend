@@ -1,34 +1,30 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
-import { Paciente } from '../_model/paciente';
+import { Rol } from '../_model/rol';
+import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PacienteService extends GenericService<Paciente>{
+export class RolService extends GenericService<Rol> {
 
-  private pacienteCambio: Subject<Paciente[]> = new Subject<
-    Paciente[]
+  private rolCambio: Subject<Rol[]> = new Subject<
+    Rol[]
   >();
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
-    super(http, `${environment.HOST}/pacientes`);
+    super(http, `${environment.HOST}/roles`);
   }
 
-  listarFavoritos() {
-    return this.http.get<Paciente[]>(`${this.url}/favoritos`);
+  getRolCambio() {
+    return this.rolCambio.asObservable();
   }
 
-  getPacienteCambio() {
-    return this.pacienteCambio.asObservable();
-  }
-
-  setPacienteCambio(pacientes: Paciente[]) {
-    this.pacienteCambio.next(pacientes);
+  setRolCambio(roles: Rol[]) {
+    this.rolCambio.next(roles);
   }
 
   getMensajeCambio() {
@@ -38,7 +34,4 @@ export class PacienteService extends GenericService<Paciente>{
   setMensajeCambio(mensaje: string) {
     this.mensajeCambio.next(mensaje);
   }
-
-
-
 }

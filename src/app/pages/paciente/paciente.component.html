@@ -1,5 +1,9 @@
 <router-outlet></router-outlet>
 
+<mat-card>
+  <mat-card-content style="font-size: 30px; background-color: #333854; color: white;">PACIENTE</mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>
 <div class="example-header">
     <mat-form-field style="display:block">
         <input matInput (keyup)="filtrar($event)" placeholder="Buscar Paciente">
@@ -41,6 +45,16 @@
   <ng-container matColumnDef="telefonoPaciente">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </th>
     <td mat-cell *matCellDef="let element"> {{element.telefonoPaciente}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="esActivo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </th>
+    <td mat-cell *matCellDef="let element"> {{element.esActivo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="esFavorito">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </th>
+    <td mat-cell *matCellDef="let element"> {{element.esFavorito}} </td>
   </ng-container>
 
   <ng-container matColumnDef="estadoAtencion">

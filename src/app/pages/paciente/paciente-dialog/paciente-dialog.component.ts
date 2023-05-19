@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { Paciente } from 'src/app/_model/paciente';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
@@ -14,9 +14,12 @@ import { PacienteService } from 'src/app/_service/paciente.service';
 export class PacienteDialogComponent implements OnInit {
 
   paciente: Paciente;
-  estadoAtencion: EstadoAtencion[];
-  selectedEstado: EstadoAtencion;
-  opcionSeleccionado: number;
+
+  estadoAtencion$: Observable<EstadoAtencion[]>;
+
+  esActivo: boolean;
+  esFavorito: boolean;
+  idEstadoAtencionSeleccionado: number;
 
   constructor(
     private dialogRef: MatDialogRef<PacienteDialogComponent>,
@@ -29,27 +32,28 @@ export class PacienteDialogComponent implements OnInit {
   ngOnInit(): void {
     this.paciente = { ...this.data };
 
-    this.estadoAtencionService.listar().subscribe(
-      (res: any) => this.estadoAtencion = res,
-      (err: any) => console.error('Ha ocurrido un error al tratar de obtener los proyectos.')
-    );
+    if (this.data != null && this.data.paciente_id > 0) {
+      this.idEstadoAtencionSeleccionado = this.data.estadoAtencion.estado_atencion_id;
+      this.esActivo = this.data.esActivo;
+      this.esFavorito = this.data.esFavorito;
+    }
 
-    this.selectedEstado = {...this.data.estadoAtencion};
-    this.opcionSeleccionado = this.selectedEstado.estado_atencion_id;
-
-    // this.paciente = new Paciente();
-    // this.paciente.nombresPaciente = this.data.nombresPaciente;
+    this.listarEstadoAsistencia();
   }
 
-  selectEstado() {
-    this.estadoAtencionService.listarPorId(this.opcionSeleccionado).subscribe(
-      (res: any) => this.selectedEstado = res,
-      (err: any) => console.error('Ha ocurrido un error al tratar de obtener los proyectos.')
-    );
+  listarEstadoAsistencia() {
+    this.estadoAtencion$ = this.estadoAtencionService.listar();
   }
 
   operar() {
-    this.paciente.estadoAtencion = this.selectedEstado;
+    let estadoAtencion = new EstadoAtencion();
+    estadoAtencion.estado_atencion_id = this.idEstadoAtencionSeleccionado;
+
+    this.paciente.estadoAtencion = estadoAtencion;
+    // console.log(this.paciente);
+    this.paciente.esActivo = this.esActivo;
+    this.paciente.esFavorito = this.esFavorito;
+
     if (this.paciente != null && this.paciente.paciente_id > 0) {
       //MODIFICAR
       this.pacienteService

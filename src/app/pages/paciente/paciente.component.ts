@@ -27,6 +27,8 @@ export class PacienteComponent implements OnInit {
     'direccionPaciente',
     'emailPaciente',
     'telefonoPaciente',
+    'esActivo',
+    'esFavorito',
     'estadoAtencion',
     'acciones'
   ];

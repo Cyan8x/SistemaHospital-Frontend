@@ -25,17 +25,20 @@
     <input matInput placeholder="Telefono del Paciente" minlength="3" required [(ngModel)]="paciente.telefonoPaciente">
   </mat-form-field>
 
-  <mat-form-field>
-    <input matInput placeholder="Estado del Paciente" minlength="3" required
-      [(ngModel)]="paciente.estadoAtencion.nombreEstadoAtencion">
-  </mat-form-field>
+  <section class="example-section">
+    <mat-checkbox class="example-margin" [labelPosition]="'before'"  [(ngModel)]="esActivo">Es Activo</mat-checkbox>
+  </section>
+
+  <section class="example-section">
+    <mat-checkbox class="example-margin" [labelPosition]="'before'"  [(ngModel)]="esFavorito">Es Favorito</mat-checkbox>
+  </section>
 
   <h4>Seleccione un estado</h4>
   <mat-form-field>
     <mat-label>Estado</mat-label>
-    <mat-select [(ngModel)]="opcionSeleccionado" (change)="selectEstado()">
-      <mat-option></mat-option>
-      <mat-option *ngFor="let option of estadoAtencion" [value]="option.estado_atencion_id">{{option.nombreEstadoAtencion }}</mat-option>
+    <mat-select [(ngModel)]="idEstadoAtencionSeleccionado">
+      <mat-option *ngFor="let ea of (estadoAtencion$ | async)" [value]="ea.estado_atencion_id">{{ea.nombreEstadoAtencion
+        }}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>

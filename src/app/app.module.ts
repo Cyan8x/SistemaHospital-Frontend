@@ -10,6 +10,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { EstadoAtencionEdicionComponent } from './pages/estadoAtencion/estadoAtencion-edicion/estadoAtencion-edicion.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PacienteDialogComponent } from './pages/paciente/paciente-dialog/paciente-dialog.component';
+import { InicioComponent } from './pages/inicio/inicio.component';
+import { RolComponent } from './pages/rol/rol.component';
+import { UsuarioComponent } from './pages/usuario/usuario.component';
+import { RolDialogComponent } from './pages/rol/rol-dialog/rol-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +21,11 @@ import { PacienteDialogComponent } from './pages/paciente/paciente-dialog/pacien
     PacienteComponent,
     EstadoAtencionComponent,
     EstadoAtencionEdicionComponent,
-    PacienteDialogComponent
+    PacienteDialogComponent,
+    InicioComponent,
+    RolComponent,
+    UsuarioComponent,
+    RolDialogComponent
   ],
   imports: [
     BrowserModule,

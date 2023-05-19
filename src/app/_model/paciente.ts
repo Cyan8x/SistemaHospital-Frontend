@@ -8,5 +8,7 @@ export class Paciente {
   direccionPaciente: string;
   emailPaciente: string;
   telefonoPaciente: string;
+  esActivo: boolean;
+  esFavorito: boolean;
   estadoAtencion: EstadoAtencion;
 }

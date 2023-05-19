@@ -5,7 +5,7 @@
       <mat-icon *ngIf="sidenav.opened">close</mat-icon>
     </button>
 
-    <h1 class="example-app-name" style="margin: 0">Inicio</h1>
+    <h1 class="example-app-name" style="margin: 0">Hospital Hipolito Unanue</h1>
 
     <span class="example-spacer"></span>
 
@@ -33,15 +33,27 @@
         <mat-icon>search</mat-icon>
         <span>Buscar</span>
       </button>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/inicio" style="cursor: pointer">
+        <mat-icon>home</mat-icon>
+        <span>Inicio</span>
+      </button>
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/estadoAtencion" style="cursor: pointer">
-        <mat-icon>accessibility</mat-icon>
+        <mat-icon>medication</mat-icon>
         <span>Estado Atencion</span>
       </button>
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/paciente" style="cursor: pointer">
         <mat-icon>accessibility</mat-icon>
         <span>Paciente</span>
+      </button>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/rol" style="cursor: pointer">
+        <mat-icon>supervised_user_circle</mat-icon>
+        <span>Roles</span>
+      </button>
+      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/usuario" style="cursor: pointer">
+        <mat-icon>manage_accounts</mat-icon>
+        <span>Usuarios</span>
       </button>
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/reporte" style="cursor: pointer">
@@ -51,8 +63,10 @@
       <mat-divider></mat-divider>
     </mat-sidenav>
 
+
     <mat-sidenav-content>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
+
   </mat-sidenav-container>
 </div>

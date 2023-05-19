@@ -1,0 +1,12 @@
+
+<mat-card>
+  <mat-card-content style="font-size: 30px; background-color: #333854; color: white;">INICIO</mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>
+<mat-card>
+  <mat-card-content>Favoritos</mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-nav-list>
+    <a mat-list-item *ngFor="let p of (pacientes | async)">{{ p.nombresPaciente }} {{ p.apellidosPaciente }} - {{ p.dniPaciente }}</a>
+  </mat-nav-list>
+</mat-card>
