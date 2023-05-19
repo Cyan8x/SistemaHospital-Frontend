@@ -14,6 +14,7 @@ import { InicioComponent } from './pages/inicio/inicio.component';
 import { RolComponent } from './pages/rol/rol.component';
 import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { RolDialogComponent } from './pages/rol/rol-dialog/rol-dialog.component';
+import { UsuarioDialogComponent } from './pages/usuario/usuario-dialog/usuario-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { RolDialogComponent } from './pages/rol/rol-dialog/rol-dialog.component'
     InicioComponent,
     RolComponent,
     UsuarioComponent,
-    RolDialogComponent
+    RolDialogComponent,
+    UsuarioDialogComponent
   ],
   imports: [
     BrowserModule,
