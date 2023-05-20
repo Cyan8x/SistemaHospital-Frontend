@@ -17,9 +17,14 @@ export class PacienteDialogComponent implements OnInit {
 
   estadoAtencion$: Observable<EstadoAtencion[]>;
 
-  esActivo: boolean;
-  esFavorito: boolean;
+  esActivo: boolean = false;
+  esFavorito: boolean = false;
   idEstadoAtencionSeleccionado: number;
+
+  tipo: string = 'Registro';
+
+  miInput: string = '';
+  verificar: boolean = true;
 
   constructor(
     private dialogRef: MatDialogRef<PacienteDialogComponent>,
@@ -36,6 +41,7 @@ export class PacienteDialogComponent implements OnInit {
       this.idEstadoAtencionSeleccionado = this.data.estadoAtencion.estado_atencion_id;
       this.esActivo = this.data.esActivo;
       this.esFavorito = this.data.esFavorito;
+      this.tipo = 'Edicion'
     }
 
     this.listarEstadoAsistencia();
@@ -56,6 +62,19 @@ export class PacienteDialogComponent implements OnInit {
 
     if (this.paciente != null && this.paciente.paciente_id > 0) {
       //MODIFICAR
+
+      if (this.paciente.emailPaciente == '') {
+        this.paciente.emailPaciente = null;
+      }
+
+      if (this.paciente.telefonoPaciente == '') {
+        this.paciente.telefonoPaciente = null;
+      }
+
+      if (this.paciente.direccionPaciente == '') {
+        this.paciente.direccionPaciente = null;
+      }
+
       this.pacienteService
         .modificar(this.paciente)
         .pipe(
@@ -83,6 +102,18 @@ export class PacienteDialogComponent implements OnInit {
     }
 
     this.cerrar();
+  }
+
+  validarInput() {
+    console.log(this.idEstadoAtencionSeleccionado);
+    if (this.paciente.nombresPaciente.trim() === '' ||
+      this.paciente.apellidosPaciente.trim() === '' ||
+      this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||
+      this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
+      this.verificar = true;
+    } else {
+      this.verificar = false;
+    }
   }
 
   cerrar() {

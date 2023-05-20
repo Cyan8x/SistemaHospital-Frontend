@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { switchMap } from 'rxjs';
 import { Usuario } from 'src/app/_model/usuario';
-import { UsuarioDialogComponent } from 'src/app/_pages/usuario/usuario-dialog/usuario-dialog.component';
 import { UsuarioService } from 'src/app/_service/usuario.service';
+import { UsuarioDialogComponent } from './usuario-dialog/usuario-dialog.component';
 
 @Component({
   selector: 'app-usuario',

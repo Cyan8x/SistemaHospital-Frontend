@@ -1,46 +1,37 @@
 <div>
+
   <mat-form-field>
-    <input matInput placeholder="Nombre del Paciente" minlength="3" required [(ngModel)]="paciente.nombresPaciente">
+    <input matInput placeholder="Usuario" minlength="3" required [(ngModel)]="usuario.usuario">
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="Apellidos del Paciente" minlength="3" required
-      [(ngModel)]="paciente.apellidosPaciente">
+    <input type="password" matInput placeholder="Password" minlength="3" required [(ngModel)]="usuario.password">
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="DNI del Paciente" minlength="3" required [(ngModel)]="paciente.dniPaciente">
+    <input matInput placeholder="Nombre del Usuario" minlength="3" required [(ngModel)]="usuario.nombresUsuario">
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="Direccion del Paciente" minlength="3" required
-      [(ngModel)]="paciente.direccionPaciente">
+    <input matInput placeholder="Apellidos del Usuario" minlength="3" required [(ngModel)]="usuario.apellidosUsuario">
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="Email del Paciente" minlength="3" required [(ngModel)]="paciente.emailPaciente">
+    <input type="number" matInput placeholder="DNI del Usuario" minlength="3" required [(ngModel)]="usuario.dniUsuario">
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="Telefono del Paciente" minlength="3" required [(ngModel)]="paciente.telefonoPaciente">
+    <input type="email" matInput placeholder="Email del Usuario" minlength="3" required [(ngModel)]="usuario.emailUsuario">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" matInput placeholder="Telefono del Usuario" minlength="3" required [(ngModel)]="usuario.telefonoUsuario">
   </mat-form-field>
 
   <section class="example-section">
-    <mat-checkbox class="example-margin" [labelPosition]="'before'"  [(ngModel)]="esActivo">Es Activo</mat-checkbox>
+    <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo">Es Activo</mat-checkbox>
   </section>
 
-  <section class="example-section">
-    <mat-checkbox class="example-margin" [labelPosition]="'before'"  [(ngModel)]="esFavorito">Es Favorito</mat-checkbox>
-  </section>
-
-  <h4>Seleccione un estado</h4>
-  <mat-form-field>
-    <mat-label>Estado</mat-label>
-    <mat-select [(ngModel)]="idEstadoAtencionSeleccionado">
-      <mat-option *ngFor="let ea of (estadoAtencion$ | async)" [value]="ea.estado_atencion_id">{{ea.nombreEstadoAtencion
-        }}</mat-option>
-    </mat-select>
-  </mat-form-field>
 </div>
 
 <button mat-raised-button color="primary" (click)="operar()">

@@ -8,8 +8,6 @@ import { PacienteService } from 'src/app/_service/paciente.service';
 import { PacienteDialogComponent } from './paciente-dialog/paciente-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs';
-import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
-import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 
 @Component({
   selector: 'app-paciente',
@@ -17,7 +15,6 @@ import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
   styleUrls: ['./paciente.component.css'],
 })
 export class PacienteComponent implements OnInit {
-  estadoAtencion: EstadoAtencion;
   dataSource: MatTableDataSource<Paciente>;
   displayedColumns: string[] = [
     'paciente_id',
@@ -39,8 +36,7 @@ export class PacienteComponent implements OnInit {
   constructor(
     private pacienteService: PacienteService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private estadoAsistenciaService: EstadoAtencionService
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {

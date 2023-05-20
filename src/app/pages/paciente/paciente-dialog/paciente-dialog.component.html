@@ -1,53 +1,68 @@
-<div>
-  <mat-form-field>
-    <input matInput placeholder="Nombre del Paciente" minlength="3" required [(ngModel)]="paciente.nombresPaciente">
-  </mat-form-field>
+<div style="margin: 20px;">
+  <h1>{{tipo}}</h1>
+  <mat-divider></mat-divider>
 
-  <mat-form-field>
-    <input matInput placeholder="Apellidos del Paciente" minlength="3" required
-      [(ngModel)]="paciente.apellidosPaciente">
-  </mat-form-field>
+  <div>
+    <mat-form-field class="example-full-width">
+      <mat-label>Nombre del Paciente</mat-label>
+      <input matInput placeholder="Nombre del Paciente" minlength="3" required
+        [(ngModel)]="paciente.nombresPaciente" (ngModelChange)="validarInput()">
+    </mat-form-field>
 
-  <mat-form-field>
-    <input matInput placeholder="DNI del Paciente" minlength="3" required [(ngModel)]="paciente.dniPaciente">
-  </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Apellidos del Paciente</mat-label>
+      <input matInput placeholder="Apellidos del Paciente" minlength="3" required
+        [(ngModel)]="paciente.apellidosPaciente" (ngModelChange)="validarInput()">
+    </mat-form-field>
 
-  <mat-form-field>
-    <input matInput placeholder="Direccion del Paciente" minlength="3" required
-      [(ngModel)]="paciente.direccionPaciente">
-  </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>DNI del Paciente</mat-label>
+      <input type="number" matInput placeholder="DNI del Paciente" minlength="3" required
+        [(ngModel)]="paciente.dniPaciente" (ngModelChange)="validarInput()">
+    </mat-form-field>
 
-  <mat-form-field>
-    <input matInput placeholder="Email del Paciente" minlength="3" required [(ngModel)]="paciente.emailPaciente">
-  </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Direccion del Paciente</mat-label>
+      <input matInput placeholder="Direccion del Paciente" minlength="3" [(ngModel)]="paciente.direccionPaciente" (ngModelChange)="validarInput()">
+    </mat-form-field>
 
-  <mat-form-field>
-    <input matInput placeholder="Telefono del Paciente" minlength="3" required [(ngModel)]="paciente.telefonoPaciente">
-  </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Email del Paciente</mat-label>
+      <input type="email" matInput placeholder="Email del Paciente" minlength="3" [(ngModel)]="paciente.emailPaciente" (ngModelChange)="validarInput()">
+    </mat-form-field>
 
-  <section class="example-section">
-    <mat-checkbox class="example-margin" [labelPosition]="'before'"  [(ngModel)]="esActivo">Es Activo</mat-checkbox>
-  </section>
+    <mat-form-field class="example-full-width">
+      <mat-label>Telefono del Paciente</mat-label>
+      <input type="number" matInput placeholder="Telefono del Paciente" minlength="3"
+        [(ngModel)]="paciente.telefonoPaciente" (ngModelChange)="validarInput()">
+    </mat-form-field>
 
-  <section class="example-section">
-    <mat-checkbox class="example-margin" [labelPosition]="'before'"  [(ngModel)]="esFavorito">Es Favorito</mat-checkbox>
-  </section>
+    <section class="example-section">
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo">Es Activo</mat-checkbox>
+    </section>
 
-  <h4>Seleccione un estado</h4>
-  <mat-form-field>
-    <mat-label>Estado</mat-label>
-    <mat-select [(ngModel)]="idEstadoAtencionSeleccionado">
-      <mat-option *ngFor="let ea of (estadoAtencion$ | async)" [value]="ea.estado_atencion_id">{{ea.nombreEstadoAtencion
-        }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <section class="example-section">
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esFavorito">Es
+        Favorito</mat-checkbox>
+    </section>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Seleccione un Estado</mat-label>
+      <mat-select [(ngModel)]="idEstadoAtencionSeleccionado" (ngModelChange)="validarInput()">
+        <mat-option *ngFor="let ea of (estadoAtencion$ | async)"
+          [value]="ea.estado_atencion_id">{{ea.nombreEstadoAtencion
+          }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>Aceptar</span>
+  </button>
+  <button mat-raised-button color="accent" (click)="cerrar()">
+    <mat-icon>close</mat-icon>
+    <span>Cancelar</span>
+  </button>
+
 </div>
-
-<button mat-raised-button color="primary" (click)="operar()">
-  <mat-icon>done</mat-icon>
-  <span>Aceptar</span>
-</button>
-<button mat-raised-button color="accent" (click)="cerrar()">
-  <mat-icon>close</mat-icon>
-  <span>Cancelar</span>
-</button>

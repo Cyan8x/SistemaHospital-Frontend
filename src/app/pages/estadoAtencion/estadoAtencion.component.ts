@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -6,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
+import { EstadoAtencionEdicionComponent } from './estadoAtencion-edicion/estadoAtencion-edicion.component';
 
 @Component({
   selector: 'app-estadoAtencion',
@@ -25,8 +27,9 @@ export class EstadoAtencionComponent implements OnInit {
 
   constructor(
     private estadoAtencionService: EstadoAtencionService,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.estadoAtencionService.getEstadoAtencionCambio().subscribe((data) => {
@@ -55,7 +58,14 @@ export class EstadoAtencionComponent implements OnInit {
     }})*/
   }
 
-  eliminar(id: number){
+  openDialog(estadoAtencion?: EstadoAtencion) {
+    this.dialog.open(EstadoAtencionEdicionComponent, {
+      width: '400px',
+      data: estadoAtencion
+    });
+  }
+
+  eliminar(estadoAtencion: EstadoAtencion) {
     // this.estadoAtencionService.delete(id).subscribe(() => {
     //   this.estadoAtencionService.listar().subscribe(data=>{
     //     this.estadoAtencionService.setEstadoAtencionCambio(data);
@@ -64,12 +74,12 @@ export class EstadoAtencionComponent implements OnInit {
     // });
 
     //FORMA IDEAL
-    this.estadoAtencionService.delete(id).pipe(switchMap(()=>{
+    this.estadoAtencionService.delete(estadoAtencion.estado_atencion_id).pipe(switchMap(() => {
       return this.estadoAtencionService.listar();
     }))
-    .subscribe(data=>{
-      this.estadoAtencionService.setEstadoAtencionCambio(data);
-      this.estadoAtencionService.setMensajeCambio('Se eliminó.');
-    });
+      .subscribe(data => {
+        this.estadoAtencionService.setEstadoAtencionCambio(data);
+        this.estadoAtencionService.setMensajeCambio('Se eliminó.');
+      });
   }
 }

@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Inject } from '@angular/core';
 import { switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-estadoAtencion-edicion',
@@ -11,56 +10,31 @@ import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
   styleUrls: ['./estadoAtencion-edicion.component.css'],
 })
 export class EstadoAtencionEdicionComponent implements OnInit {
-  id: number = 0;
-  edicion: boolean = false;
-  form: FormGroup;
+
+  estadoAtencion: EstadoAtencion;
+  tipo: string = 'Registro';
+
+  miInput: string = '';
+  verificar: boolean = true;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    private dialogRef: MatDialogRef<EstadoAtencionEdicionComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: EstadoAtencion,
     private estadoAtencionService: EstadoAtencionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      id: new FormControl(0),
-      nombres: new FormControl(''),
-    });
-
-    this.route.params.subscribe((data) => {
-      this.id = data['id'];
-      this.edicion = data['id'] != null;
-      this.initForm();
-    });
-  }
-
-  initForm() {
-    if (this.edicion) {
-      this.estadoAtencionService.listarPorId(this.id).subscribe((data) => {
-        this.form = new FormGroup({
-          id: new FormControl(data.estado_atencion_id),
-          nombres: new FormControl(data.nombreEstadoAtencion),
-        });
-      });
+    this.estadoAtencion = { ...this.data };
+    if (this.data != null && this.data.estado_atencion_id > 0) {
+      this.tipo = 'Edicion'
     }
   }
 
   operar() {
-    let estadoAtencion = new EstadoAtencion();
-    estadoAtencion.estado_atencion_id = this.form.value['id'];
-    estadoAtencion.nombreEstadoAtencion = this.form.value['nombres'];
-
-    if (this.edicion) {
+    if (this.estadoAtencion != null && this.estadoAtencion.estado_atencion_id > 0) {
       //MODIFICAR
-      // this.estadoAtencionService.modificar(estadoAtencion).subscribe(() => {
-      //   this.estadoAtencionService.listar().subscribe((data) => {
-      //     this.estadoAtencionService.estadoAtencionCambio.next(data);
-      //     this.estadoAtencionService.mensajeCambio.next('Se modificó.');
-      //   });
-
-      //FORMA IDEAL
       this.estadoAtencionService
-        .modificar(estadoAtencion)
+        .modificar(this.estadoAtencion)
         .pipe(
           switchMap(() => {
             return this.estadoAtencionService.listar();
@@ -72,16 +46,8 @@ export class EstadoAtencionEdicionComponent implements OnInit {
         });
     } else {
       //REGISTRAR
-      // this.estadoAtencionService.registrar(estadoAtencion).subscribe(() => {
-      //   this.estadoAtencionService.listar().subscribe((data) => {
-      //     this.estadoAtencionService.setEstadoAtencionCambio(data);
-      //     this.estadoAtencionService.setMensajeCambio('Se registró.');
-      //   });
-      // });
-
-      //FORMA IDEAL
       this.estadoAtencionService
-        .registrar(estadoAtencion)
+        .registrar(this.estadoAtencion)
         .pipe(
           switchMap(() => {
             return this.estadoAtencionService.listar();
@@ -93,6 +59,14 @@ export class EstadoAtencionEdicionComponent implements OnInit {
         });
     }
 
-    this.router.navigate(['/pages/estadoAtencion']);
+    this.cerrar();
+  }
+
+  validarInput() {
+    this.verificar = this.estadoAtencion.nombreEstadoAtencion.trim() === '';
+  }
+
+  cerrar() {
+    this.dialogRef.close();
   }
 }
