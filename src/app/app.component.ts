@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { BuscarComponent } from './pages/buscar/buscar.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +9,17 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'SistemaHospital-Frontend';
+
+  constructor(
+    private dialog: MatDialog
+  ) { }
+
+
+  openDialog() {
+    this.dialog.open(BuscarComponent, {
+      width: '90%',
+      height: '90%'
+    });
+  }
 }
 

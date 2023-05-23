@@ -9,6 +9,8 @@
 
     <span class="example-spacer"></span>
 
+    <button mat-raised-button color="accent">Asistencia</button>
+
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>
@@ -29,7 +31,7 @@
     <mat-sidenav #sidenav style="width: 200px" mode="push">
       <img src="assets/img/logo2SinBg.png" width="128" style="margin: 20px 0 20px 30px" />
 
-      <button mat-menu-item (click)="sidenav.toggle()" routerLink="/pages/buscar" style="cursor: pointer">
+      <button mat-menu-item (click)="sidenav.toggle()"  (click)="openDialog()" style="cursor: pointer">
         <mat-icon>search</mat-icon>
         <span>Buscar</span>
       </button>

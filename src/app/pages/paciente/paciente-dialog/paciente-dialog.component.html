@@ -5,8 +5,8 @@
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Nombre del Paciente</mat-label>
-      <input matInput placeholder="Nombre del Paciente" minlength="3" required
-        [(ngModel)]="paciente.nombresPaciente" (ngModelChange)="validarInput()">
+      <input matInput placeholder="Nombre del Paciente" minlength="3" required [(ngModel)]="paciente.nombresPaciente"
+        (ngModelChange)="validarInput()">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
@@ -23,12 +23,14 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Direccion del Paciente</mat-label>
-      <input matInput placeholder="Direccion del Paciente" minlength="3" [(ngModel)]="paciente.direccionPaciente" (ngModelChange)="validarInput()">
+      <input matInput placeholder="Direccion del Paciente" minlength="3" [(ngModel)]="paciente.direccionPaciente"
+        (ngModelChange)="validarInput()">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Email del Paciente</mat-label>
-      <input type="email" matInput placeholder="Email del Paciente" minlength="3" [(ngModel)]="paciente.emailPaciente" (ngModelChange)="validarInput()">
+      <input type="email" matInput placeholder="Email del Paciente" minlength="3" [(ngModel)]="paciente.emailPaciente"
+        (ngModelChange)="validarInput()">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
@@ -38,11 +40,11 @@
     </mat-form-field>
 
     <section class="example-section">
-      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo">Es Activo</mat-checkbox>
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo" (change)="validarInput()">Es Activo</mat-checkbox>
     </section>
 
     <section class="example-section">
-      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esFavorito">Es
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esFavorito" (change)="validarInput()">Es
         Favorito</mat-checkbox>
     </section>
 

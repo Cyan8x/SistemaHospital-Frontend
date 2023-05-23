@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable, switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { Paciente } from 'src/app/_model/paciente';
+import { Usuario } from 'src/app/_model/usuario';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 import { PacienteService } from 'src/app/_service/paciente.service';
 
@@ -31,7 +32,6 @@ export class PacienteDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: Paciente,
     private pacienteService: PacienteService,
     private estadoAtencionService: EstadoAtencionService) {
-
   }
 
   ngOnInit(): void {
@@ -88,6 +88,9 @@ export class PacienteDialogComponent implements OnInit {
         });
     } else {
       //REGISTRAR
+      let usuario = new Usuario();
+      usuario.usuario_id = 1;
+      this.paciente.usuario = usuario;
       this.pacienteService
         .registrar(this.paciente)
         .pipe(
@@ -105,7 +108,6 @@ export class PacienteDialogComponent implements OnInit {
   }
 
   validarInput() {
-    console.log(this.idEstadoAtencionSeleccionado);
     if (this.paciente.nombresPaciente.trim() === '' ||
       this.paciente.apellidosPaciente.trim() === '' ||
       this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||

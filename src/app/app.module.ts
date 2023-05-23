@@ -15,6 +15,9 @@ import { RolComponent } from './pages/rol/rol.component';
 import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { RolDialogComponent } from './pages/rol/rol-dialog/rol-dialog.component';
 import { UsuarioDialogComponent } from './pages/usuario/usuario-dialog/usuario-dialog.component';
+import { BuscarComponent } from './pages/buscar/buscar.component';
+import { PacienteDialogUserviewComponent } from './pages/paciente-dialog-userview/paciente-dialog-userview.component';
+import { ProcedimientoDialogComponent } from './pages/paciente-dialog-userview/procedimiento-dialog/procedimiento-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { UsuarioDialogComponent } from './pages/usuario/usuario-dialog/usuario-d
     RolComponent,
     UsuarioComponent,
     RolDialogComponent,
-    UsuarioDialogComponent
+    UsuarioDialogComponent,
+    BuscarComponent,
+    PacienteDialogUserviewComponent,
+    ProcedimientoDialogComponent
   ],
   imports: [
     BrowserModule,

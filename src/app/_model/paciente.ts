@@ -1,4 +1,5 @@
 import { EstadoAtencion } from "./estadoAtencion";
+import { Usuario } from "./usuario";
 
 export class Paciente {
   paciente_id: number;
@@ -11,4 +12,5 @@ export class Paciente {
   esActivo: boolean;
   esFavorito: boolean;
   estadoAtencion: EstadoAtencion;
+  usuario: Usuario;
 }

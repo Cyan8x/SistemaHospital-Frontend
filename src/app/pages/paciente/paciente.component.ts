@@ -27,6 +27,7 @@ export class PacienteComponent implements OnInit {
     'esActivo',
     'esFavorito',
     'estadoAtencion',
+    'usuarioCreador',
     'acciones'
   ];
 

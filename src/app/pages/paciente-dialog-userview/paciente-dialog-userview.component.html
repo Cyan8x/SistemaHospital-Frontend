@@ -1,0 +1,54 @@
+<div class="parent">
+  <div class="div1 design">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-subtitle>{{paciente.estadoAtencion.nombreEstadoAtencion}}</mat-card-subtitle>
+        <mat-card-subtitle>Es creado por: </mat-card-subtitle>
+        <mat-card-title>{{paciente.nombresPaciente}} {{paciente.apellidosPaciente}} -
+          {{paciente.dniPaciente}}</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <p>
+          <b>Direccion: </b>
+          <span *ngIf="paciente.direccionPaciente == null; else DireccionNoEsNulo">-</span>
+          <ng-template #DireccionNoEsNulo>
+            {{paciente.direccionPaciente}}
+          </ng-template>
+        </p>
+        <p>
+          <b>Email: </b>
+          <span *ngIf="paciente.emailPaciente == null; else emailNoEsNulo">-</span>
+          <ng-template #emailNoEsNulo>
+            {{paciente.emailPaciente}}
+          </ng-template>
+        </p>
+        <p>
+          <b>Telefono: </b>
+          <span *ngIf="paciente.telefonoPaciente== null; else telefonoNoEsNuLo">-</span>
+          <ng-template #telefonoNoEsNuLo>
+            {{paciente.telefonoPaciente}}
+          </ng-template>
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <mat-divider></mat-divider>
+    <mat-card class="example-card">
+      <mat-card-header class="procedimientos">
+        <mat-card-title>Procedimientos</mat-card-title>
+        <button mat-mini-fab color="accent" (click)="openDialog()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <ul>
+          <li *ngFor="let procedimiento of procedimientos">{{ procedimiento.procedimiento }}</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="div2 design">
+    <h1>Comentarios</h1>
+  </div>
+</div>

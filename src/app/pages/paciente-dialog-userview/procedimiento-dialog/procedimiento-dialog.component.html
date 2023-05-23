@@ -1,0 +1,56 @@
+<div style="margin: 20px;">
+  <h1>{{tipo}}</h1>
+  <mat-divider></mat-divider>
+
+  <div>
+    <mat-form-field class="example-full-width">
+      <mat-label>Procedimiento</mat-label>
+      <input matInput placeholder="Procedimiento" minlength="3" required [(ngModel)]="procedimiento.procedimiento"
+        (ngModelChange)="validarInput()">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Fecha Inicio</mat-label>
+      <input matInput placeholder="Fecha Inicio" minlength="3" required [(ngModel)]="procedimiento.fechaHoraInicio"
+        (ngModelChange)="validarInput()">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date & time" [(ngModel)]="myDatePicker">
+
+      <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
+
+      <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+    </mat-form-field>
+
+    <ngx-mat-timepicker [(ngModel)]="myTimePicker">
+    </ngx-mat-timepicker>
+
+    <mat-form-field>
+      <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate">
+      <mat-datepicker-toggle matSuffix [for]="$any(picker)">
+      </mat-datepicker-toggle>
+      <ngx-mat-datetime-picker #picker [showSpinners]="true">
+      </ngx-mat-datetime-picker>
+    </mat-form-field>
+    <br>
+    Moment Date - {{selectedDate}} <br>
+    Javascript Date - {{selectedDate?.toDate()}}
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Fecha Fin</mat-label>
+      <input type="number" matInput placeholder="Fecha Fin" minlength="3" required
+        [(ngModel)]="procedimiento.fechaHoraFin" (ngModelChange)="validarInput()">
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>Aceptar</span>
+  </button>
+  <button mat-raised-button color="accent" (click)="cerrar()">
+    <mat-icon>close</mat-icon>
+    <span>Cancelar</span>
+  </button>
+
+</div>

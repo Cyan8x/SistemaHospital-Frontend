@@ -15,6 +15,10 @@ export class UsuarioDialogComponent implements OnInit {
 
   esActivo: boolean = false;
 
+  tipo: string = 'Registro';
+
+  verificar: boolean = true;
+
   constructor(
     private dialogRef: MatDialogRef<UsuarioDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Usuario,
@@ -27,6 +31,7 @@ export class UsuarioDialogComponent implements OnInit {
 
     if (this.data != null && this.data.usuario_id > 0) {
       this.esActivo = this.data.esActivoUsuario;
+      this.tipo = 'Edicion';
     }
   }
 
@@ -35,6 +40,15 @@ export class UsuarioDialogComponent implements OnInit {
 
     if (this.usuario != null && this.usuario.usuario_id > 0) {
       //MODIFICAR
+
+      if (this.usuario.emailUsuario == '') {
+        this.usuario.emailUsuario = null;
+      }
+
+      if (this.usuario.telefonoUsuario == '') {
+        this.usuario.telefonoUsuario = null;
+      }
+
       this.usuarioService
         .modificar(this.usuario)
         .pipe(
@@ -62,6 +76,18 @@ export class UsuarioDialogComponent implements OnInit {
     }
 
     this.cerrar();
+  }
+
+  validarInput() {
+    if (this.usuario.usuario.trim() === '' ||
+      this.usuario.password.trim() === '' ||
+      this.usuario.nombresUsuario.trim() === '' ||
+      this.usuario.apellidosUsuario.trim() === '' ||
+      this.usuario.dniUsuario === null || this.usuario.dniUsuario === undefined) {
+      this.verificar = true;
+    } else {
+      this.verificar = false;
+    }
   }
 
   cerrar() {
