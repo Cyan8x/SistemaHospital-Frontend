@@ -36,7 +36,7 @@ export class PacienteDialogUserviewComponent implements OnInit {
   openDialog(procedimiento?: Procedimiento) {
     this.dialog.open(ProcedimientoDialogComponent, {
       width: '50%',
-      height: '70%',
+      height: '90%',
       data: {
         procedimiento: procedimiento,
         paciente: this.paciente

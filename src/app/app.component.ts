@@ -17,8 +17,8 @@ export class AppComponent {
 
   openDialog() {
     this.dialog.open(BuscarComponent, {
-      width: '90%',
-      height: '90%'
+      width: '100%',
+      height: '95%'
     });
   }
 }

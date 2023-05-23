@@ -65,4 +65,6 @@ import {
     { provide: DateAdapter, useClass: CustomDateAdapter }
   ]
 })
-export class MaterialModule { }
+export class MaterialModule {
+
+}

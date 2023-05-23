@@ -66,7 +66,8 @@ export class PacienteComponent implements OnInit {
 
   openDialog(paciente?: Paciente) {
     this.dialog.open(PacienteDialogComponent, {
-      width: '400px',
+      width: '50%',
+      height: '95%',
       data: paciente
     });
   }

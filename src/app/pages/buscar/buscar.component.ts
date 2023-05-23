@@ -46,7 +46,7 @@ export class BuscarComponent implements OnInit {
   openDialog(paciente: Paciente) {
     this.dialog.open(PacienteDialogUserviewComponent, {
       width: '100%',
-      height: '90%',
+      height: '95%',
       data: paciente
     });
   }

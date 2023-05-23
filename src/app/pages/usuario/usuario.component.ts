@@ -64,7 +64,8 @@ export class UsuarioComponent {
 
   openDialog(usuario?: Usuario) {
     this.dialog.open(UsuarioDialogComponent, {
-      width: '400px',
+      width: '50%',
+      height: '95%',
       data: usuario
     });
   }
