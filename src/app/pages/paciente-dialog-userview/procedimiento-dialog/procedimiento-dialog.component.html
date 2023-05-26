@@ -10,15 +10,14 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Fecha Inicio</mat-label>
-      <input matInput [ngxMatDatetimePicker]="picker" placeholder="Fecha de Inicio" [formControl]="dateControl">
-      <!-- [min]="minDate" [max]="maxDate" [disabled]="disabled" -->
-      <mat-datepicker-toggle matSuffix [for]="$any(picker)">
-      </mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #picker [showSpinners]="true" [showSeconds]="false" [touchUi]="false"
-        [enableMeridian]="true">
-      </ngx-mat-datetime-picker>
+      <mat-label>{{type}}</mat-label>
+      <mtx-datetimepicker #datetimePicker [type]="type" [mode]="mode" [multiYearSelector]="multiYearSelector"
+        [startView]="startView" [twelvehour]="twelvehour" [timeInterval]="timeInterval" [touchUi]="touchUi"
+        [timeInput]="timeInput"></mtx-datetimepicker>
+      <input [mtxDatetimepicker]="datetimePicker" [formControl]="datetime" matInput required>
+      <mtx-datetimepicker-toggle [for]="datetimePicker" matSuffix></mtx-datetimepicker-toggle>
     </mat-form-field>
+
   </div>
 
   <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">

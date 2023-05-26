@@ -1,11 +1,19 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, Renderer2 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { Paciente } from 'src/app/_model/paciente';
 import { Procedimiento } from 'src/app/_model/procedimiento';
 import { ProcedimientoService } from 'src/app/_service/procedimiento.service';
-import * as moment from 'moment';
-import { FormControl } from '@angular/forms';
+import {
+  MtxCalendarView,
+  MtxDatetimepickerMode,
+  MtxDatetimepickerType,
+} from '@ng-matero/extensions/datetimepicker';
+
+import { UntypedFormControl } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
+
+
 
 @Component({
   selector: 'app-procedimiento-dialog',
@@ -21,26 +29,25 @@ export class ProcedimientoDialogComponent implements OnInit {
   miInput: string = '';
   verificar: boolean = true;
 
-  // disabled = false;
-  // showSpinners = true;
-  // showSeconds = false;
-  // touchUi = false;
-  // enableMeridian = false;
-  // minDate: Date;
-  // maxDate: Date;
-  // stepHour = 1;
-  // stepMinute = 1;
-  // stepSecond = 1;
-  // color: ThemePalette = 'primary';
-  // disableMinute = false;
-  // hideTime = false;
+  primary:ThemePalette = "primary";
+  type: MtxDatetimepickerType = 'datetime';
+  mode: MtxDatetimepickerMode = 'auto';
+  startView: MtxCalendarView = 'month';
+  multiYearSelector = false;
+  touchUi = false;
+  twelvehour = true;
+  timeInterval = 1;
+  timeInput = true;
 
-  dateControl = new FormControl(new Date());
+  datetime = new UntypedFormControl();
+
+
 
   constructor(
     private dialogRef: MatDialogRef<ProcedimientoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any,
-    private procedimientoService: ProcedimientoService) {
+    private procedimientoService: ProcedimientoService,
+    private renderer: Renderer2) {
 
   }
 
@@ -51,6 +58,10 @@ export class ProcedimientoDialogComponent implements OnInit {
     if (this.procedimiento != null && this.procedimiento.procedimiento_id > 0) {
       this.tipo = 'Edicion'
     }
+  }
+
+  ngAfterViewInit() {
+    this.agregarEstilosDinamicos();
   }
 
   operar() {
@@ -96,6 +107,25 @@ export class ProcedimientoDialogComponent implements OnInit {
 
   cerrar() {
     this.dialogRef.close();
+  }
+
+  agregarEstilosDinamicos() {
+    const styles = `
+      .mtx-calendar{
+        background: #fff;
+        box-shadow: 7px 9px 13px 4px rgba(0,0,0,0.71);
+      }
+      .mtx-calendar-header{
+        background: #3f48cc;
+        color:#fff;
+      }
+    `;
+
+    const styleElement = this.renderer.createElement('style');
+    const styleText = this.renderer.createText(styles);
+
+    this.renderer.appendChild(styleElement, styleText);
+    this.renderer.appendChild(document.head, styleElement);
   }
 
 }
