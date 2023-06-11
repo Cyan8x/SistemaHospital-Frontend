@@ -6,6 +6,5 @@ export class Comentario {
   usuario: Usuario;
   paciente: Paciente;
   comentario: string;
-  fechaComentario: Date;
   fechaHoraComentario: string;
 }

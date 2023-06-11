@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { NavigationExtras, Router } from '@angular/router';
 import { Paciente } from 'src/app/_model/paciente';
 import { PacienteService } from 'src/app/_service/paciente.service';
-import { PacienteDialogUserviewComponent } from '../paciente-dialog-userview/paciente-dialog-userview.component';
 
 @Component({
   selector: 'app-buscar',
@@ -25,7 +25,7 @@ export class BuscarComponent implements OnInit {
 
   constructor(
     private pacienteService: PacienteService,
-    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -43,11 +43,12 @@ export class BuscarComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  openDialog(paciente: Paciente) {
-    this.dialog.open(PacienteDialogUserviewComponent, {
-      width: '100%',
-      height: '95%',
-      data: paciente
-    });
+  redireccionarConParametros(paciente_id: number) {
+    const currentRoute: NavigationExtras = {
+      state: {
+        urlAnterior: this.router.url
+      }
+    };
+    this.router.navigate(['/pages/paciente-userview', paciente_id],currentRoute);
   }
 }

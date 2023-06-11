@@ -26,8 +26,6 @@ import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { MtxMomentDatetimeModule } from '@ng-matero/extensions-moment-adapter';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
-
-
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -74,8 +72,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
           monthInput: 'MMMM',
           yearInput: 'YYYY',
           timeInput: 'HH:mm',
-          datetimeInput: 'YYYY-MM-DD HH:mm',
-          monthYearLabel: 'YYYY MMMM',
+          datetimeInput: 'DD-MM-YYYY HH:mm',
+          monthYearLabel: 'MMMM YYYY',
           dateA11yLabel: 'LL',
           monthYearA11yLabel: 'MMMM YYYY',
           popupHeaderDateLabel: 'MMM DD, ddd',

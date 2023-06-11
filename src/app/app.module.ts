@@ -18,6 +18,8 @@ import { UsuarioDialogComponent } from './pages/usuario/usuario-dialog/usuario-d
 import { BuscarComponent } from './pages/buscar/buscar.component';
 import { PacienteDialogUserviewComponent } from './pages/paciente-dialog-userview/paciente-dialog-userview.component';
 import { ProcedimientoDialogComponent } from './pages/paciente-dialog-userview/procedimiento-dialog/procedimiento-dialog.component';
+import { ComentarioDialogComponent } from './pages/paciente-dialog-userview/comentario-dialog/comentario-dialog.component';
+import { AuxurldialogComponent } from './pages/auxurldialog/auxurldialog.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { ProcedimientoDialogComponent } from './pages/paciente-dialog-userview/p
     UsuarioDialogComponent,
     BuscarComponent,
     PacienteDialogUserviewComponent,
-    ProcedimientoDialogComponent
+    ProcedimientoDialogComponent,
+    ComentarioDialogComponent,
+    AuxurldialogComponent
   ],
   imports: [
     BrowserModule,

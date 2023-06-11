@@ -1,0 +1,22 @@
+<div style="margin: 20px;">
+  <h1>{{tipo}}</h1>
+  <mat-divider></mat-divider>
+
+  <div>
+    <mat-form-field class="example-full-width">
+      <mat-label>Comentario</mat-label>
+      <textarea matInput placeholder="Comentario" minlength="3" required [(ngModel)]="comentario.comentario"
+        (ngModelChange)="validarInput()"></textarea>
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>Aceptar</span>
+  </button>
+  <button mat-raised-button color="accent" (click)="cerrar()">
+    <mat-icon>close</mat-icon>
+    <span>Cancelar</span>
+  </button>
+
+</div>

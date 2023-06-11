@@ -11,7 +11,8 @@ import {
 } from '@ng-matero/extensions/datetimepicker';
 
 import { UntypedFormControl } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
+import * as moment from 'moment';
+import { Usuario } from 'src/app/_model/usuario';
 
 
 
@@ -25,21 +26,19 @@ export class ProcedimientoDialogComponent implements OnInit {
   paciente: Paciente;
 
   tipo: string = 'Registro';
-
   miInput: string = '';
   verificar: boolean = true;
 
-  primary:ThemePalette = "primary";
   type: MtxDatetimepickerType = 'datetime';
   mode: MtxDatetimepickerMode = 'auto';
   startView: MtxCalendarView = 'month';
-  multiYearSelector = false;
-  touchUi = false;
-  twelvehour = true;
-  timeInterval = 1;
-  timeInput = true;
-
-  datetime = new UntypedFormControl();
+  // multiYearSelector = false;
+  // touchUi = false;
+  // twelvehour = true;
+  // timeInterval = 1;
+  // timeInput = true;
+  datetimeFechaInicio = new UntypedFormControl();
+  datetimeFechaFin = new UntypedFormControl();
 
 
 
@@ -65,14 +64,22 @@ export class ProcedimientoDialogComponent implements OnInit {
   }
 
   operar() {
+    this.procedimiento.fechaHoraInicio = moment(this.datetimeFechaInicio.value).format('YYYY-MM-DDTHH:mm:ss');
+    this.procedimiento.fechaHoraFin = moment(this.datetimeFechaFin.value).format('YYYY-MM-DDTHH:mm:ss');
     this.procedimiento.paciente = this.paciente;
+    let usuario = new Usuario();
+    usuario.usuario_id = 1;
+    usuario.usuario = 'administrador';
+    this.procedimiento.usuario = usuario;
+    this.procedimiento.es_terminado = false;
+    this.procedimiento.usuario_creador = usuario.usuario;
     if (this.procedimiento != null && this.procedimiento.procedimiento_id > 0) {
       //MODIFICAR
       this.procedimientoService
         .modificar(this.procedimiento)
         .pipe(
           switchMap(() => {
-            return this.procedimientoService.listar();
+            return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
           })
         )
         .subscribe((data) => {
@@ -85,7 +92,7 @@ export class ProcedimientoDialogComponent implements OnInit {
         .registrar(this.procedimiento)
         .pipe(
           switchMap(() => {
-            return this.procedimientoService.listar();
+            return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
           })
         )
         .subscribe((data) => {
@@ -98,11 +105,15 @@ export class ProcedimientoDialogComponent implements OnInit {
   }
 
   validarInput() {
-    if (this.procedimiento.procedimiento.trim() === '') {
+    if (this.procedimiento.procedimiento.trim() === ''
+      // || this.procedimiento.fechaHoraInicio.trim() === '' ||
+      // this.procedimiento.fechaHoraInicio.trim() === ''
+    ) {
       this.verificar = true;
     } else {
       this.verificar = false;
     }
+
   }
 
   cerrar() {
@@ -127,5 +138,4 @@ export class ProcedimientoDialogComponent implements OnInit {
     this.renderer.appendChild(styleElement, styleText);
     this.renderer.appendChild(document.head, styleElement);
   }
-
 }

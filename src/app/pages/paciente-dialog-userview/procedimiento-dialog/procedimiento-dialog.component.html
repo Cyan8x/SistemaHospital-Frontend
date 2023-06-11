@@ -9,13 +9,24 @@
         (ngModelChange)="validarInput()"></textarea>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>{{type}}</mat-label>
-      <mtx-datetimepicker #datetimePicker [type]="type" [mode]="mode" [multiYearSelector]="multiYearSelector"
-        [startView]="startView" [twelvehour]="twelvehour" [timeInterval]="timeInterval" [touchUi]="touchUi"
-        [timeInput]="timeInput"></mtx-datetimepicker>
-      <input [mtxDatetimepicker]="datetimePicker" [formControl]="datetime" matInput required>
-      <mtx-datetimepicker-toggle [for]="datetimePicker" matSuffix></mtx-datetimepicker-toggle>
+    <mat-form-field class="example-full-width">
+      <mat-label>Fecha Inicio</mat-label>
+      <mtx-datetimepicker #datetimePickerFechaInicio [type]="type" [mode]="mode" [multiYearSelector]="true"
+        [startView]="startView" [twelvehour]="true" [timeInterval]="1" [touchUi]="false"
+        [timeInput]="true"></mtx-datetimepicker>
+      <input [mtxDatetimepicker]="datetimePickerFechaInicio" [formControl]="datetimeFechaInicio" matInput required
+        (ngModelChange)="validarInput()">
+      <mtx-datetimepicker-toggle [for]="datetimePickerFechaInicio" matSuffix></mtx-datetimepicker-toggle>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Fecha Fin</mat-label>
+      <mtx-datetimepicker #datetimePickerFechaFin [type]="type" [mode]="mode" [multiYearSelector]="true"
+        [startView]="startView" [twelvehour]="true" [timeInterval]="1" [touchUi]="false"
+        [timeInput]="true"></mtx-datetimepicker>
+      <input [mtxDatetimepicker]="datetimePickerFechaFin" [formControl]="datetimeFechaFin" matInput required
+        (ngModelChange)="validarInput()">
+      <mtx-datetimepicker-toggle [for]="datetimePickerFechaFin" matSuffix></mtx-datetimepicker-toggle>
     </mat-form-field>
 
   </div>

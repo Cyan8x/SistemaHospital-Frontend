@@ -7,10 +7,13 @@ import { InicioComponent } from './pages/inicio/inicio.component';
 import { RolComponent } from './pages/rol/rol.component';
 import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { BuscarComponent } from './pages/buscar/buscar.component';
+import { PacienteDialogUserviewComponent } from './pages/paciente-dialog-userview/paciente-dialog-userview.component';
+import { AuxurldialogComponent } from './pages/auxurldialog/auxurldialog.component';
 
 const routes: Routes = [
   { path: 'pages/paciente', component: PacienteComponent },
   { path: 'pages/inicio', component: InicioComponent },
+  { path: 'pages/paciente-userview/:id', component: AuxurldialogComponent },
   { path: 'pages/rol', component: RolComponent },
   { path: 'pages/usuario', component: UsuarioComponent },
   { path: 'pages/buscar', component: BuscarComponent },
