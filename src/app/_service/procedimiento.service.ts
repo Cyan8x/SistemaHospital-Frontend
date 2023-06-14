@@ -17,7 +17,7 @@ export class ProcedimientoService extends GenericService<Procedimiento>{
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
-    super(http, `${environment.HOST}/procedimientos`);
+    super(http, `${environment.HOST}/procedimiento`);
   }
 
   listarProcedimientosPendientesPorPaciente(paciente_id: number) {

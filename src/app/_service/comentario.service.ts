@@ -16,7 +16,7 @@ export class ComentarioService extends GenericService<Comentario> {
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
-    super(http, `${environment.HOST}/comentarios`);
+    super(http, `${environment.HOST}/comentario`);
   }
 
   listarComentariosPorPaciente(paciente_id: number) {

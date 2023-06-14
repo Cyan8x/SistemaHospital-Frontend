@@ -16,7 +16,7 @@ export class UsuarioService extends GenericService<Usuario> {
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
-    super(http, `${environment.HOST}/usuarios`);
+    super(http, `${environment.HOST}/usuario`);
   }
 
   getUsuarioCambio() {

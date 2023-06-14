@@ -7,6 +7,8 @@ import { Paciente } from 'src/app/_model/paciente';
 import { Procedimiento } from 'src/app/_model/procedimiento';
 import { PacienteService } from 'src/app/_service/paciente.service';
 import { ProcedimientoService } from 'src/app/_service/procedimiento.service';
+import { PacienteDialogComponent } from '../paciente/paciente-dialog/paciente-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface ProcedimientoNode {
   procedimiento: string;
@@ -58,6 +60,7 @@ export class InicioComponent implements OnInit {
     private pacienteService: PacienteService,
     private router: Router,
     private procedimientoService: ProcedimientoService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -110,5 +113,11 @@ export class InicioComponent implements OnInit {
     this.router.navigate(['/pages/paciente-userview', paciente_id], currentRoute);
   }
 
+  registrarPacienteDialog() {
+    this.dialog.open(PacienteDialogComponent, {
+      width: '50%',
+      height: '95%'
+    });
+  }
 }
 

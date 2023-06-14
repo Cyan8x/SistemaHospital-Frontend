@@ -1,34 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PacienteComponent } from './pages/paciente/paciente.component';
-import { EstadoAtencionComponent } from './pages/estadoAtencion/estadoAtencion.component';
-import { EstadoAtencionEdicionComponent } from './pages/estadoAtencion/estadoAtencion-edicion/estadoAtencion-edicion.component';
-import { InicioComponent } from './pages/inicio/inicio.component';
-import { RolComponent } from './pages/rol/rol.component';
-import { UsuarioComponent } from './pages/usuario/usuario.component';
-import { BuscarComponent } from './pages/buscar/buscar.component';
-import { PacienteDialogUserviewComponent } from './pages/paciente-dialog-userview/paciente-dialog-userview.component';
-import { AuxurldialogComponent } from './pages/auxurldialog/auxurldialog.component';
+import { LoginComponent } from './pages/login/login.component';
+import { LayoutComponent } from './pages/layout/layout.component';
+import { Not404Component } from './pages/not404/not404.component';
 
 const routes: Routes = [
-  { path: 'pages/paciente', component: PacienteComponent },
-  { path: 'pages/inicio', component: InicioComponent },
-  { path: 'pages/paciente-userview/:id', component: AuxurldialogComponent },
-  { path: 'pages/rol', component: RolComponent },
-  { path: 'pages/usuario', component: UsuarioComponent },
-  { path: 'pages/buscar', component: BuscarComponent },
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'pages/estadoAtencion',
-    component: EstadoAtencionComponent,
-    children: [
-      { path: 'nuevo', component: EstadoAtencionEdicionComponent },
-      { path: 'edicion/:id', component: EstadoAtencionEdicionComponent }
-    ]
+    path: 'pages',
+    component: LayoutComponent,
+    loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
   },
+  { path: 'not-404', component: Not404Component },
+  { path: '**', redirectTo: 'not-404'}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

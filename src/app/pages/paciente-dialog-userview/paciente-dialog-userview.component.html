@@ -54,7 +54,9 @@
                 <mat-checkbox class="example-margin" [checked]="procedimiento.es_terminado"
                   (change)="procedimientoTerminado(procedimiento)">
                 </mat-checkbox>
-                {{ procedimiento.procedimiento }}
+                <a style="text-decoration: none; color: #000;"
+                  (click)="openDialogProcedimiento(procedimiento)">{{ procedimiento.procedimiento }}</a>
+
               </div>
               <button mat-button color="primary" (click)="eliminar(procedimiento)">
                 <mat-icon>delete</mat-icon>

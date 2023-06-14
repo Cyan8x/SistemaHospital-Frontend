@@ -16,7 +16,7 @@ export class PacienteService extends GenericService<Paciente>{
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
-    super(http, `${environment.HOST}/pacientes`);
+    super(http, `${environment.HOST}/paciente`);
   }
 
   listarFavoritos() {

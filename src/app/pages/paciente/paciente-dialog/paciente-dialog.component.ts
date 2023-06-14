@@ -6,6 +6,7 @@ import { Paciente } from 'src/app/_model/paciente';
 import { Usuario } from 'src/app/_model/usuario';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 import { PacienteService } from 'src/app/_service/paciente.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-paciente-dialog',
@@ -13,6 +14,9 @@ import { PacienteService } from 'src/app/_service/paciente.service';
   styleUrls: ['./paciente-dialog.component.css']
 })
 export class PacienteDialogComponent implements OnInit {
+
+  tiposDocumento: string[] = ['DNI', 'Carnet de Extranjeria'];
+  tipoSeleccionado: string = this.tiposDocumento[0];
 
   paciente: Paciente;
 
@@ -37,6 +41,8 @@ export class PacienteDialogComponent implements OnInit {
   ngOnInit(): void {
     this.paciente = { ...this.data };
 
+    console.log(new Date());
+
     if (this.data != null && this.data.paciente_id > 0) {
       this.idEstadoAtencionSeleccionado = this.data.estadoAtencion.estado_atencion_id;
       this.esActivo = this.data.esActivo;
@@ -58,7 +64,22 @@ export class PacienteDialogComponent implements OnInit {
     this.paciente.estadoAtencion = estadoAtencion;
     // console.log(this.paciente);
     this.paciente.esActivo = this.esActivo;
-    this.paciente.esFavorito = this.esFavorito;
+    this.paciente.esFavorito = false;
+
+    this.paciente.tipoDocumento = this.tipoSeleccionado;
+    if (this.tipoSeleccionado == this.tiposDocumento[0]) {
+      this.paciente.carneExtranjeria = null;
+    } else if (this.tipoSeleccionado == this.tiposDocumento[1]) {
+      this.paciente.dniPaciente = null;
+    } else {
+      this.paciente.tipoDocumento = 'noTipoDocumento'
+      this.paciente.carneExtranjeria = null;
+      this.paciente.dniPaciente = null;
+    }
+
+    this.paciente.fechaCreacionPaciente = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+
+    console.log(this.paciente.fechaCreacionPaciente);
 
     if (this.paciente != null && this.paciente.paciente_id > 0) {
       //MODIFICAR
@@ -108,14 +129,27 @@ export class PacienteDialogComponent implements OnInit {
   }
 
   validarInput() {
-    if (this.paciente.nombresPaciente.trim() === '' ||
-      this.paciente.apellidosPaciente.trim() === '' ||
-      this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||
-      this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
-      this.verificar = true;
-    } else {
-      this.verificar = false;
+
+    if (this.tipoSeleccionado == this.tiposDocumento[0]) {
+      if (this.paciente.nombresPaciente.trim() === '' ||
+        this.paciente.apellidosPaciente.trim() === '' ||
+        this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||
+        this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
+        this.verificar = true;
+      } else {
+        this.verificar = false;
+      }
+    } else if (this.tipoSeleccionado == this.tiposDocumento[1]) {
+      if (this.paciente.nombresPaciente.trim() === '' ||
+        this.paciente.apellidosPaciente.trim() === '' ||
+        this.paciente.carneExtranjeria === null || this.paciente.carneExtranjeria === undefined ||
+        this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
+        this.verificar = true;
+      } else {
+        this.verificar = false;
+      }
     }
+
   }
 
   cerrar() {

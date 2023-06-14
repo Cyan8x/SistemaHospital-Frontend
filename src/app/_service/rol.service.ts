@@ -16,7 +16,7 @@ export class RolService extends GenericService<Rol> {
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
-    super(http, `${environment.HOST}/roles`);
+    super(http, `${environment.HOST}/rol`);
   }
 
   getRolCambio() {

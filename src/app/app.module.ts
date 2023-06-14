@@ -3,52 +3,48 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material/material.module';
-import { PacienteComponent } from './pages/paciente/paciente.component';
-import { EstadoAtencionComponent } from './pages/estadoAtencion/estadoAtencion.component';
-import { HttpClientModule } from '@angular/common/http';
-import { EstadoAtencionEdicionComponent } from './pages/estadoAtencion/estadoAtencion-edicion/estadoAtencion-edicion.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PacienteDialogComponent } from './pages/paciente/paciente-dialog/paciente-dialog.component';
-import { InicioComponent } from './pages/inicio/inicio.component';
-import { RolComponent } from './pages/rol/rol.component';
-import { UsuarioComponent } from './pages/usuario/usuario.component';
-import { RolDialogComponent } from './pages/rol/rol-dialog/rol-dialog.component';
-import { UsuarioDialogComponent } from './pages/usuario/usuario-dialog/usuario-dialog.component';
-import { BuscarComponent } from './pages/buscar/buscar.component';
-import { PacienteDialogUserviewComponent } from './pages/paciente-dialog-userview/paciente-dialog-userview.component';
-import { ProcedimientoDialogComponent } from './pages/paciente-dialog-userview/procedimiento-dialog/procedimiento-dialog.component';
-import { ComentarioDialogComponent } from './pages/paciente-dialog-userview/comentario-dialog/comentario-dialog.component';
-import { AuxurldialogComponent } from './pages/auxurldialog/auxurldialog.component';
+import { LoginComponent } from './pages/login/login.component';
+import { MaterialModule } from './material/material.module';
+import { environment } from 'src/environments/environment';
+import { JwtModule } from '@auth0/angular-jwt';
+import { ServerErrorsInterceptor } from './shared/server-errors.interceptor';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
+export function tokenGetter() {
+  return sessionStorage.getItem(environment.TOKEN_NAME)
+}
 
 @NgModule({
   declarations: [
     AppComponent,
-    PacienteComponent,
-    EstadoAtencionComponent,
-    EstadoAtencionEdicionComponent,
-    PacienteDialogComponent,
-    InicioComponent,
-    RolComponent,
-    UsuarioComponent,
-    RolDialogComponent,
-    UsuarioDialogComponent,
-    BuscarComponent,
-    PacienteDialogUserviewComponent,
-    ProcedimientoDialogComponent,
-    ComentarioDialogComponent,
-    AuxurldialogComponent
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
     HttpClientModule,
     ReactiveFormsModule, //Formularios
-    FormsModule //Two Way Biding
+    FormsModule, //Two Way Biding
+    MaterialModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: [environment.HOST.replace("http://", "").split("/")[0]],
+        disallowedRoutes: [`${environment.HOST.split("/")[0]}/oauth/token`]
+      }
+    })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServerErrorsInterceptor,
+      multi: true
+    },
+    // { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

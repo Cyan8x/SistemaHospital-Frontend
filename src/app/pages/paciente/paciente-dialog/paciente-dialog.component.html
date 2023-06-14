@@ -15,11 +15,28 @@
         [(ngModel)]="paciente.apellidosPaciente" (ngModelChange)="validarInput()">
     </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <mat-label>DNI del Paciente</mat-label>
-      <input type="number" matInput placeholder="DNI del Paciente" minlength="3" required
-        [(ngModel)]="paciente.dniPaciente" (ngModelChange)="validarInput()">
+    <mat-form-field>
+      <mat-label>Tipo de Documento del Paciente</mat-label>
+      <mat-select [(ngModel)]="tipoSeleccionado" [(value)]="tipoSeleccionado">
+        <mat-option *ngFor="let tipDocument of tiposDocumento" [value]="tipDocument">{{ tipDocument }}</mat-option>
+      </mat-select>
     </mat-form-field>
+
+    <div *ngIf="tipoSeleccionado === 'DNI'">
+      <mat-form-field class="example-full-width">
+        <mat-label>DNI</mat-label>
+        <input type="number" matInput placeholder="DNI" minlength="8" maxlength="8" required
+          [(ngModel)]="paciente.dniPaciente" (ngModelChange)="validarInput()">
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="tipoSeleccionado === 'Carnet de Extranjeria'">
+      <mat-form-field class="example-full-width">
+        <mat-label>Carnet de Extranjeria</mat-label>
+        <input type="number" matInput placeholder="Carnet de Extranjeria" minlength="9" maxlength="9" required
+          [(ngModel)]="paciente.carneExtranjeria" (ngModelChange)="validarInput()">
+      </mat-form-field>
+    </div>
 
     <mat-form-field class="example-full-width">
       <mat-label>Direccion del Paciente</mat-label>
@@ -40,13 +57,15 @@
     </mat-form-field>
 
     <section class="example-section">
-      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo" (change)="validarInput()">Es Activo</mat-checkbox>
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo"
+        (change)="validarInput()">Es Activo</mat-checkbox>
     </section>
 
-    <section class="example-section">
-      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esFavorito" (change)="validarInput()">Es
+    <!-- <section class="example-section">
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esFavorito"
+        (change)="validarInput()">Es
         Favorito</mat-checkbox>
-    </section>
+    </section> -->
 
     <mat-form-field class="example-full-width">
       <mat-label>Seleccione un Estado</mat-label>
