@@ -4,19 +4,19 @@
       <mat-icon aria-hidden="false" *ngIf="!sidenav.opened">menu_open</mat-icon>
       <mat-icon *ngIf="sidenav.opened">close</mat-icon>
     </button>
-<!--
+    <!--
     <h1 class="example-app-name" style="margin: 0">Hospital Hipolito Unanue</h1> -->
 
     <span class="example-spacer"></span>
 
-    <button mat-raised-button color="accent">Asistencia</button>
+    <button mat-raised-button color="accent" *ngIf="mostrarBotonAsistencia" (click)="asistencia()">Asistencia</button>
 
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>
 
     <mat-menu #menu="matMenu">
-      <button mat-menu-item color="primary">{{usuario}}</button>
+      <button mat-menu-item color="primary">{{usuario.usuario}}</button>
       <button mat-menu-item routerLink="/perfil">
         <mat-icon>account_box</mat-icon>
         <span>Mi Perfil</span>
@@ -32,7 +32,7 @@
     <mat-sidenav #sidenav style="width: 200px" mode="push">
       <img src="assets/img/logo2SinBg.png" width="128" style="margin: 20px 0 20px 30px" />
 
-      <button mat-menu-item (click)="sidenav.toggle()"  (click)="openDialog()" style="cursor: pointer">
+      <button mat-menu-item (click)="sidenav.toggle()" (click)="openDialog()" style="cursor: pointer">
         <mat-icon>search</mat-icon>
         <span>Buscar</span>
       </button>

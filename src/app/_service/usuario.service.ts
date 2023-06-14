@@ -10,6 +10,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UsuarioService extends GenericService<Usuario> {
 
+  private usuarioLogueado: Usuario;
+
   private usuarioCambio: Subject<Usuario[]> = new Subject<
   Usuario[]
   >();
@@ -17,6 +19,18 @@ export class UsuarioService extends GenericService<Usuario> {
 
   constructor(protected override http: HttpClient) {
     super(http, `${environment.HOST}/usuario`);
+  }
+
+  listarPorUsername(username: string) {
+    return this.http.get<Usuario>(`${this.url}/porUsername/${username}`);
+  }
+
+  getUsuarioLogueado(){
+    return this.usuarioLogueado;
+  }
+
+  setUsuarioLogueado(usuario: Usuario){
+    this.usuarioLogueado = usuario;
   }
 
   getUsuarioCambio() {
