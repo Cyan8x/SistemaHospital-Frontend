@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { UsuarioService } from './usuario.service';
+import { Usuario } from '../_model/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,8 @@ export class LoginService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private usuarioService: UsuarioService
   ) { }
 
   login(usuario: string, contrasena: string) {

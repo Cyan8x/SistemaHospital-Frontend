@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Usuario } from 'src/app/_model/usuario';
 import { LoginService } from 'src/app/_service/login.service';
+import { UsuarioService } from 'src/app/_service/usuario.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

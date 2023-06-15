@@ -4,6 +4,7 @@ import { Asistencia } from '../_model/asistencia';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { SuccessMessage } from '../_model/succesMessageDto';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,14 @@ export class AsistenciaService extends GenericService<Asistencia>{
 
   constructor(protected override http: HttpClient) {
     super(http, `${environment.HOST}/asistencia`);
+  }
+
+  verificarAsistenciaUsuarioHoy(usuario_id: number) {
+    return this.http.get<SuccessMessage>(`${this.url}/verificar/${usuario_id}`);
+  }
+
+  registrarAsistenciaConValidaciones(usuario_id: number) {
+    return this.http.post(`${this.url}/registrarConValid/${usuario_id}`, null);
   }
 
   getAsistenciaCambio() {

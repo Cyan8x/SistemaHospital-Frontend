@@ -32,6 +32,10 @@ export class ProcedimientoService extends GenericService<Procedimiento>{
     return this.http.get<Procedimiento[]>(`${this.url}/terminadosPorPaciente/${paciente_id}`);
   }
 
+  selectProcedimientosPendientesPorUsuarioHoy(usuario_id: number) {
+    return this.http.get<Procedimiento[]>(`${this.url}/pendientesPorUsuario/hoy/${usuario_id}`);
+  }
+
   getProcedimientoCambio() {
     return this.procedimientoCambio.asObservable();
   }

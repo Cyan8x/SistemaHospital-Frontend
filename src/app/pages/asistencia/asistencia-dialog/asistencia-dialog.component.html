@@ -1,0 +1,23 @@
+<div style="margin: 20px;">
+  <h1>{{tipo}}</h1>
+  <mat-divider></mat-divider>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Estado Asistencia</mat-label>
+      <mat-select [(value)]="estadoAsistenciaSeleccionado.estado_asistencia_id">
+        <mat-option *ngFor="let estado of estadosAsistencia" [value]="estado.estado_asistencia_id">{{
+          estado.nombreEstadoAsistencia }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>Aceptar</span>
+  </button>
+  <button mat-raised-button color="accent" (click)="cerrar()">
+    <mat-icon>close</mat-icon>
+    <span>Cancelar</span>
+  </button>
+</div>

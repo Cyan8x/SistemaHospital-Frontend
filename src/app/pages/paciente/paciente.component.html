@@ -32,10 +32,25 @@
 
     <ng-container matColumnDef="dniPaciente">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> DNI </th>
-      <td mat-cell *matCellDef="let element"> {{element.dniPaciente}} </td>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="element.dniPaciente == null; else dniNoEsNulo">-</div>
+        <ng-template #dniNoEsNulo>
+          {{element.dniPaciente}}
+        </ng-template>
+      </td>
     </ng-container>
 
-    <ng-container matColumnDef="direccionPaciente">
+    <ng-container matColumnDef="carneExtranjeria">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Carne Extranjeria </th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="element.carneExtranjeria == null; else carneExtranjeNoEsNulo">-</div>
+        <ng-template #carneExtranjeNoEsNulo>
+          {{element.carneExtranjeria}}
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <!-- <ng-container matColumnDef="direccionPaciente">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion </th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.direccionPaciente == null; else direccionNoEsNulo">-</div>
@@ -43,8 +58,7 @@
           {{element.direccionPaciente}}
         </ng-template>
       </td>
-
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="emailPaciente">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
@@ -76,14 +90,14 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="esFavorito">
+    <!-- <ng-container matColumnDef="esFavorito">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Es Favorito </th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.esFavorito; else noEsFavorito">SI</div>
         <ng-template #noEsFavorito>
           <div>No</div>
         </ng-template>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="estadoAtencion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>

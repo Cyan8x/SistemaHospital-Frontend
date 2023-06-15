@@ -11,7 +11,7 @@ import { UsuarioService } from 'src/app/_service/usuario.service';
 import { Usuario } from 'src/app/_model/usuario';
 import { Asistencia } from 'src/app/_model/asistencia';
 import * as moment from 'moment';
-import { EstadoAsistencia } from 'src/app/_model/EstadoAsistencia';
+import { EstadoAsistencia } from 'src/app/_model/estadoAsistencia';
 
 @Component({
   selector: 'app-layout',
@@ -44,12 +44,22 @@ export class LayoutComponent implements OnInit {
       data => {
         this.usuario = data;
         this.usuarioService.setUsuarioLogueado(this.usuario);
+
+        this.asistenciaService.verificarAsistenciaUsuarioHoy(this.usuario.usuario_id).subscribe(data => {
+          if (data.message.includes("SI")) {
+            this.mostrarBotonAsistencia = false;
+          } else if (data.message.includes("NO")) {
+            this.mostrarBotonAsistencia = true;
+          }
+        });
       }
     );
 
-    this.menuService.listarPorUsuario(this.usuario.usuario).subscribe(data => {
+    this.menuService.listarPorUsuario(this.usuarioLogueado).subscribe(data => {
       this.menus = data;
-    })
+    });
+
+
   }
 
 
@@ -65,17 +75,12 @@ export class LayoutComponent implements OnInit {
   }
 
   asistencia() {
-    let estadoAsistencia = new EstadoAsistencia()
-    estadoAsistencia.estado_asistencia_id = 1;
-
-    let asistencia = new Asistencia();
-    asistencia.usuario = this.usuarioService.getUsuarioLogueado();
-    asistencia.fechaHoraAsistencia = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-    asistencia.justificacionTardanza = null;
-    asistencia.estadoAsistencia = estadoAsistencia;
-
-    this.asistenciaService.registrar(asistencia).subscribe(data=>{
+    this.asistenciaService.registrarAsistenciaConValidaciones(this.usuario.usuario_id).subscribe(data=>{
       console.log(data);
     });
+
+    setTimeout(() => {
+      this.mostrarBotonAsistencia = false;
+    }, 2000);
   }
 }

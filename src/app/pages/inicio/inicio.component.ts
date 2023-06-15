@@ -9,6 +9,8 @@ import { PacienteService } from 'src/app/_service/paciente.service';
 import { ProcedimientoService } from 'src/app/_service/procedimiento.service';
 import { PacienteDialogComponent } from '../paciente/paciente-dialog/paciente-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UsuarioService } from 'src/app/_service/usuario.service';
+import { Usuario } from 'src/app/_model/usuario';
 
 interface ProcedimientoNode {
   procedimiento: string;
@@ -27,6 +29,8 @@ interface ExampleFlatNode {
   styleUrls: ['./inicio.component.css']
 })
 export class InicioComponent implements OnInit {
+  usuarioLogueado: Usuario;
+
   pacientes: Observable<Paciente[]>;
 
   procedimientos: Procedimiento[];
@@ -60,8 +64,11 @@ export class InicioComponent implements OnInit {
     private pacienteService: PacienteService,
     private router: Router,
     private procedimientoService: ProcedimientoService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private usuarioService: UsuarioService
   ) {
+
+    this.usuarioLogueado = this.usuarioService.getUsuarioLogueado();
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -69,12 +76,12 @@ export class InicioComponent implements OnInit {
   ngOnInit(): void {
     this.listarFavoritos();
 
-    this.procedimientoService.getProcedimientoCambio().subscribe((data) => {
-      this.procedimientos = data;
-      this.agregarElementosAlTree();
-    });
+    // this.procedimientoService.getProcedimientoCambio().subscribe((data) => {
+    //   this.procedimientos = data;
+    //   this.agregarElementosAlTree();
+    // });
 
-    this.procedimientoService.listar().subscribe((data) => {
+    this.procedimientoService.selectProcedimientosPendientesPorUsuarioHoy(this.usuarioLogueado.usuario_id).subscribe((data) => {
       this.procedimientos = data;
       this.agregarElementosAlTree();
     })

@@ -7,6 +7,7 @@ import { Usuario } from 'src/app/_model/usuario';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 import { PacienteService } from 'src/app/_service/paciente.service';
 import * as moment from 'moment';
+import { UsuarioService } from 'src/app/_service/usuario.service';
 
 @Component({
   selector: 'app-paciente-dialog',
@@ -35,19 +36,19 @@ export class PacienteDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<PacienteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Paciente,
     private pacienteService: PacienteService,
-    private estadoAtencionService: EstadoAtencionService) {
+    private estadoAtencionService: EstadoAtencionService,
+    private usuarioService: UsuarioService) {
   }
 
   ngOnInit(): void {
     this.paciente = { ...this.data };
 
-    console.log(new Date());
-
     if (this.data != null && this.data.paciente_id > 0) {
       this.idEstadoAtencionSeleccionado = this.data.estadoAtencion.estado_atencion_id;
       this.esActivo = this.data.esActivo;
       this.esFavorito = this.data.esFavorito;
-      this.tipo = 'Edicion'
+      this.tipo = 'Edicion';
+      this.tipoSeleccionado = this.data.tipoDocumento;
     }
 
     this.listarEstadoAsistencia();
@@ -109,9 +110,7 @@ export class PacienteDialogComponent implements OnInit {
         });
     } else {
       //REGISTRAR
-      let usuario = new Usuario();
-      usuario.usuario_id = 1;
-      this.paciente.usuario = usuario;
+      this.paciente.usuario = this.usuarioService.getUsuarioLogueado();
       this.pacienteService
         .registrar(this.paciente)
         .pipe(

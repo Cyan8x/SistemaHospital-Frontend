@@ -48,19 +48,31 @@
       <mat-card-content style="height: 80%;">
         <mat-list style="height: 100%;">
           <div class="scroll-container-procedimientos">
-            <mat-list style="height: auto; padding: 10px 0; display: flex; justify-content: space-between;"
-              *ngFor="let procedimiento of procedimientos">
-              <div>
-                <mat-checkbox class="example-margin" [checked]="procedimiento.es_terminado"
-                  (change)="procedimientoTerminado(procedimiento)">
-                </mat-checkbox>
-                <a style="text-decoration: none; color: #000;"
-                  (click)="openDialogProcedimiento(procedimiento)">{{ procedimiento.procedimiento }}</a>
+            <mat-list>
+              <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let procedimiento of procedimientos">
+                <span matListItemTitle>
+                  <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex;">
+                      <mat-checkbox class="example-margin" [checked]="procedimiento.es_terminado"
+                        (change)="procedimientoTerminado(procedimiento)">
+                      </mat-checkbox>
+                      <div>
+                        <a style="text-decoration: none; color: #000; cursor: pointer;"
+                          (click)="openDialogProcedimiento(procedimiento)">{{
+                          procedimiento.procedimiento }}</a>
+                        <span matListItemLine>Creador: {{procedimiento.usuario_creador}}</span>
+                        <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.-> {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
+                      </div>
+                    </div>
+                    <button mat-button color="primary" (click)="eliminar(procedimiento)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </span>
 
-              </div>
-              <button mat-button color="primary" (click)="eliminar(procedimiento)">
-                <mat-icon>delete</mat-icon>
-              </button>
+
+
+              </mat-list-item>
             </mat-list>
           </div>
           <mat-divider></mat-divider>

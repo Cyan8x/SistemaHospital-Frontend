@@ -13,6 +13,7 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { Usuario } from 'src/app/_model/usuario';
+import { UsuarioService } from 'src/app/_service/usuario.service';
 
 
 
@@ -46,7 +47,8 @@ export class ProcedimientoDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<ProcedimientoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private procedimientoService: ProcedimientoService,
-    private renderer: Renderer2) {
+    private renderer: Renderer2,
+    private usuarioService: UsuarioService) {
 
   }
 
@@ -56,6 +58,8 @@ export class ProcedimientoDialogComponent implements OnInit {
 
     if (this.procedimiento != null && this.procedimiento.procedimiento_id > 0) {
       this.tipo = 'Edicion'
+      this.datetimeFechaInicio = new UntypedFormControl(this.procedimiento.fechaHoraInicio);
+      this.datetimeFechaFin = new UntypedFormControl(this.procedimiento.fechaHoraFin);
     }
   }
 
@@ -67,12 +71,9 @@ export class ProcedimientoDialogComponent implements OnInit {
     this.procedimiento.fechaHoraInicio = moment(this.datetimeFechaInicio.value).format('YYYY-MM-DDTHH:mm:ss');
     this.procedimiento.fechaHoraFin = moment(this.datetimeFechaFin.value).format('YYYY-MM-DDTHH:mm:ss');
     this.procedimiento.paciente = this.paciente;
-    let usuario = new Usuario();
-    usuario.usuario_id = 1;
-    usuario.usuario = 'administrador';
-    this.procedimiento.usuario = usuario;
+    this.procedimiento.usuario = this.usuarioService.getUsuarioLogueado();
     this.procedimiento.es_terminado = false;
-    this.procedimiento.usuario_creador = usuario.usuario;
+    this.procedimiento.usuario_creador = this.usuarioService.getUsuarioLogueado().usuario;
     if (this.procedimiento != null && this.procedimiento.procedimiento_id > 0) {
       //MODIFICAR
       this.procedimientoService
@@ -88,6 +89,7 @@ export class ProcedimientoDialogComponent implements OnInit {
         });
     } else {
       //REGISTRAR
+      this.procedimiento.fechaCreacionProced = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
       this.procedimientoService
         .registrar(this.procedimiento)
         .pipe(

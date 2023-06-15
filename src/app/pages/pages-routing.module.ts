@@ -9,9 +9,11 @@ import { BuscarComponent } from './buscar/buscar.component';
 import { EstadoAtencionComponent } from './estadoAtencion/estadoAtencion.component';
 import { GuardService } from '../_service/guard.service';
 import { Not403Component } from './not403/not403.component';
+import { AsistenciaComponent } from './asistencia/asistencia.component';
 
 const routes: Routes = [
   { path: 'paciente', component: PacienteComponent, canActivate: [GuardService] },
+  { path: 'asistencia', component: AsistenciaComponent, canActivate: [GuardService] },
   { path: 'inicio', component: InicioComponent, canActivate: [GuardService] },
   { path: 'paciente-userview/:id', component: AuxurldialogComponent, canActivate: [GuardService] },
   { path: 'rol', component: RolComponent, canActivate: [GuardService] },

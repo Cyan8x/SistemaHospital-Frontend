@@ -21,6 +21,9 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { CommonModule } from '@angular/common';
 import { Not403Component } from './not403/not403.component';
 import { Not404Component } from './not404/not404.component';
+import { AsistenciaComponent } from './asistencia/asistencia.component';
+import { AsistenciaDialogComponent } from './asistencia/asistencia-dialog/asistencia-dialog.component';
+import { EliminarAsistenciaDialogComponent } from './asistencia/eliminar-asistencia-dialog/eliminar-asistencia-dialog.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { Not404Component } from './not404/not404.component';
     AuxurldialogComponent,
     LayoutComponent,
     Not403Component,
-    Not404Component
+    Not404Component,
+    AsistenciaComponent,
+    AsistenciaDialogComponent,
+    EliminarAsistenciaDialogComponent
   ],
   imports: [
     MaterialModule,
