@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Usuario } from 'src/app/_model/usuario';
 import { LoginService } from 'src/app/_service/login.service';
 import { UsuarioService } from 'src/app/_service/usuario.service';
@@ -17,9 +18,14 @@ export class LoginComponent {
   mensaje: string;
   error: string;
 
+
+  usuarioLogueado: string;
+  user: Usuario;
+
   constructor(
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
@@ -31,6 +37,18 @@ export class LoginComponent {
   iniciarSesion() {
     this.loginService.login(this.usuario, this.clave).subscribe(data => {
       sessionStorage.setItem(environment.TOKEN_NAME, data.access_token);
+
+      const helper = new JwtHelperService();
+      let token = sessionStorage.getItem(environment.TOKEN_NAME);
+      const decodedToken = helper.decodeToken(token);
+      this.usuarioLogueado = decodedToken.user_name;
+
+      this.usuarioService.listarPorUsername(this.usuarioLogueado).subscribe(
+        data => {
+          this.user = data;
+          this.usuarioService.setUsuarioLogueado(this.user);
+        }
+      );
       this.router.navigate(['/pages/inicio']);
     });
   }

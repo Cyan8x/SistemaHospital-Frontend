@@ -84,6 +84,18 @@ mat-card {
   visibility: visible;
 } */
 
+
+.comment-list {
+  height: 100%; /* Ajusta la altura según tus necesidades */
+  overflow-y: auto;
+}
+
+.comment {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
 @media only screen and (max-width: 1100px) {
   .parent {
     display: grid;

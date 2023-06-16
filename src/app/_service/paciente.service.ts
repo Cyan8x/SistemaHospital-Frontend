@@ -19,8 +19,16 @@ export class PacienteService extends GenericService<Paciente>{
     super(http, `${environment.HOST}/paciente`);
   }
 
-  listarFavoritos() {
-    return this.http.get<Paciente[]>(`${this.url}/favoritos`);
+  selectFavoritosPorUsuario(usuario_id: number) {
+    return this.http.get<Paciente[]>(`${this.url}/favoritos/${usuario_id}`);
+  }
+
+  insertFavoritoPorUsuario(usuario_id: number, paciente_id: number) {
+    return this.http.post(`${this.url}/insertFavoritos/${usuario_id}/${paciente_id}`, null);
+  }
+
+  deleteFavoritoPorUsuario(usuario_id: number, paciente_id: number) {
+    return this.http.delete(`${this.url}/deleteFavoritos/${usuario_id}/${paciente_id}`);
   }
 
   getPacienteCambio() {

@@ -61,10 +61,11 @@
                           (click)="openDialogProcedimiento(procedimiento)">{{
                           procedimiento.procedimiento }}</a>
                         <span matListItemLine>Creador: {{procedimiento.usuario_creador}}</span>
-                        <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.-> {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
+                        <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.->
+                            {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
                       </div>
                     </div>
-                    <button mat-button color="primary" (click)="eliminar(procedimiento)">
+                    <button mat-button color="primary" (click)="eliminarProcedimiento(procedimiento)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>
@@ -93,11 +94,37 @@
 
         <mat-list style="height: 100%;">
           <div class="scroll-container-comentarios">
-            <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let coment of comentarios">
+
+            <div class="comment-list" #commentContainer (scroll)="onScroll($event)">
+              <div *ngFor="let comment of comentarios; let i = index"
+                [style.transform]="'translateY(' + (i * 80) + 'px)'">
+                <div class="comment">
+                  <span matListItemTitle style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span><b>{{comment.usuario.usuario.toUpperCase() }}</b> ha comentado:</span>
+                    <span>{{ comment.fechaHoraComentario | date:'dd-MM-yyyy HH:mm' }}
+
+                      <button mat-button [matMenuTriggerFor]="beforeMenu" style="height: 0;">
+                        <mat-icon color="primary">settings</mat-icon>
+                      </button>
+                      <mat-menu #beforeMenu="matMenu" xPosition="before">
+                        <button mat-menu-item (click)="openDialogComentario(comment)">Editar</button>
+                        <button mat-menu-item (click)="eliminarComentario(comment)">Eliminar</button>
+                      </mat-menu>
+
+                    </span>
+                  </span>
+                  <span matListItemLine style="font-size: 18px;">{{ comment.comentario }}</span>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let coment of comentarios">
               <div class="text-content">
                 {{ coment.comentario }}
               </div>
-            </mat-list-item>
+            </mat-list-item> -->
           </div>
           <mat-divider></mat-divider>
         </mat-list>

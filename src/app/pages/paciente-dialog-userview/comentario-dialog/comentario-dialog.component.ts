@@ -48,7 +48,7 @@ export class ComentarioDialogComponent implements OnInit {
         .modificar(this.comentario)
         .pipe(
           switchMap(() => {
-            return this.comentarioService.listar();
+            return this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id);
           })
         )
         .subscribe((data) => {
@@ -61,7 +61,7 @@ export class ComentarioDialogComponent implements OnInit {
         .registrar(this.comentario)
         .pipe(
           switchMap(() => {
-            return this.comentarioService.listar();
+            return this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id);
           })
         )
         .subscribe((data) => {

@@ -11,6 +11,8 @@ import { PacienteDialogComponent } from '../paciente/paciente-dialog/paciente-di
 import { MatDialog } from '@angular/material/dialog';
 import { UsuarioService } from 'src/app/_service/usuario.service';
 import { Usuario } from 'src/app/_model/usuario';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 interface ProcedimientoNode {
   procedimiento: string;
@@ -29,12 +31,13 @@ interface ExampleFlatNode {
   styleUrls: ['./inicio.component.css']
 })
 export class InicioComponent implements OnInit {
-  usuarioLogueado: Usuario;
-
-  pacientes: Observable<Paciente[]>;
+  pacientesFavoritos: Observable<Paciente[]>;
 
   procedimientos: Procedimiento[];
   textoProcedimientos: ProcedimientoNode[] = [];
+
+  usuarioLogueado:string;
+  usuario: Usuario;
 
   procedimientosHoy: ProcedimientoNode[];
 
@@ -66,26 +69,29 @@ export class InicioComponent implements OnInit {
     private procedimientoService: ProcedimientoService,
     private dialog: MatDialog,
     private usuarioService: UsuarioService
-  ) {
-
-    this.usuarioLogueado = this.usuarioService.getUsuarioLogueado();
-  }
+  ) { }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
-    this.listarFavoritos();
+    const helper = new JwtHelperService();
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    const decodedToken = helper.decodeToken(token);
+    this.usuarioLogueado = decodedToken.user_name;
 
-    // this.procedimientoService.getProcedimientoCambio().subscribe((data) => {
-    //   this.procedimientos = data;
-    //   this.agregarElementosAlTree();
-    // });
+    this.usuarioService.listarPorUsername(this.usuarioLogueado).subscribe(
+      data => {
+        this.usuario = data;
+        this.usuarioService.setUsuarioLogueado(this.usuario);
 
-    this.procedimientoService.selectProcedimientosPendientesPorUsuarioHoy(this.usuarioLogueado.usuario_id).subscribe((data) => {
-      this.procedimientos = data;
-      this.agregarElementosAlTree();
-    })
+        this.listarFavoritos(this.usuario.usuario_id);
 
+        this.procedimientoService.selectProcedimientosPendientesPorUsuarioHoy(this.usuarioService.getUsuarioLogueado().usuario_id).subscribe((data) => {
+          this.procedimientos = data;
+          this.agregarElementosAlTree();
+        })
+      }
+    );
   }
 
   agregarElementosAlTree() {
@@ -107,8 +113,8 @@ export class InicioComponent implements OnInit {
     this.treeControl.expandAll();
   }
 
-  listarFavoritos() {
-    this.pacientes = this.pacienteService.listarFavoritos();
+  listarFavoritos(usuario_id: number) {
+    this.pacientesFavoritos = this.pacienteService.selectFavoritosPorUsuario(usuario_id);
   }
 
   redireccionarConParametros(paciente_id: number) {

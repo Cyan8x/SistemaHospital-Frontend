@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Paciente } from 'src/app/_model/paciente';
@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs';
   templateUrl: './paciente-dialog-userview.component.html',
   styleUrls: ['./paciente-dialog-userview.component.css']
 })
-export class PacienteDialogUserviewComponent implements OnInit {
+export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
   paciente: Paciente;
   procedimientos: Procedimiento[];
   procedimientosPendientes: Procedimiento[];
@@ -32,8 +32,12 @@ export class PacienteDialogUserviewComponent implements OnInit {
 
   marcado: boolean;
 
+  disableScrollToBottom = false;
 
   mostrarBotonComentar: boolean = false;
+
+
+  @ViewChild('commentContainer') commentContainer: ElementRef;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: Paciente,
@@ -44,6 +48,8 @@ export class PacienteDialogUserviewComponent implements OnInit {
   ) {
   }
 
+
+
   ngOnInit(): void {
     this.paciente = { ...this.data };
 
@@ -52,8 +58,32 @@ export class PacienteDialogUserviewComponent implements OnInit {
 
     this.cantidadProcedimientosTerminados();
 
-
   }
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      const container = this.commentContainer.nativeElement;
+      container.scrollTop = container.scrollHeight - container.clientHeight;
+    }, 0);
+  }
+
+  onScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+
+    if (!atBottom) {
+      // El scroll no está en la parte inferior, deshabilita el desplazamiento automático
+      this.disableScrollToBottom = true;
+    } else {
+      // El scroll está en la parte inferior
+      this.disableScrollToBottom = false;
+    }
+  }
+
 
   datosComentariosDePaciente() {
     this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id).subscribe((data) => {
@@ -156,7 +186,7 @@ export class PacienteDialogUserviewComponent implements OnInit {
     this.esClickeado = !this.esClickeado;
   }
 
-  eliminar(procedimiento: Procedimiento) {
+  eliminarProcedimiento(procedimiento: Procedimiento) {
     this.procedimientoService.delete(procedimiento.procedimiento_id).pipe(switchMap(() => {
       if (this.mostrarContenido == 'Mostrar Completados') {
         return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
@@ -167,6 +197,16 @@ export class PacienteDialogUserviewComponent implements OnInit {
         this.procedimientoService.setProcedimientoCambio(data);
         this.procedimientoService.setMensajeCambio('Se eliminó.');
         this.cantidadProcedimientosTerminados();
+      });
+  }
+
+  eliminarComentario(comentario: Comentario) {
+    this.comentarioService.delete(comentario.comentario_id).pipe(switchMap(() => {
+      return this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id);
+    }))
+      .subscribe(data => {
+        this.comentarioService.setComentarioCambio(data);
+        this.comentarioService.setMensajeCambio('Se eliminó.');
       });
   }
 
