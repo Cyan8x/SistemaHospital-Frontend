@@ -1,11 +1,16 @@
 <div class="parent">
   <div class="div1 design parent-infoPaciente">
     <mat-card class="example-card div1-info">
-      <mat-card-header>
+      <mat-card-header style="justify-content: space-between;">
         <mat-card-subtitle>{{paciente.estadoAtencion.nombreEstadoAtencion}}</mat-card-subtitle>
-        <mat-card-subtitle>Es creado por: </mat-card-subtitle>
+        <mat-card-subtitle>Es creado por: {{paciente.usuario.usuario}}</mat-card-subtitle>
         <mat-card-title>{{paciente.nombresPaciente}} {{paciente.apellidosPaciente}} -
-          {{paciente.dniPaciente}}</mat-card-title>
+          {{paciente.dniPaciente}}
+        </mat-card-title>
+        <button mat-fab matTooltip="Accent" [color]="colorFavorite"
+            (click)="marcarFavoritoPorusuario(paciente.paciente_id)">
+            <mat-icon>{{acccionFavorite}}</mat-icon>
+          </button>
       </mat-card-header>
       <mat-divider></mat-divider>
       <mat-card-content>
@@ -40,6 +45,11 @@
           <button mat-stroked-button *ngIf="cantTerminados > 0" [color]="color"
             (click)="cambiarContenidoBoton()">{{mostrarContenido}} ({{cantTerminados}})</button>
         </mat-card-title>
+        <div *ngIf="mostrarBotonReporte">
+          <button mat-mini-fab color="primary" (click)="verReporteEnDialog()">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+        </div>
         <button mat-mini-fab color="accent" (click)="openDialogProcedimiento()">
           <mat-icon>add</mat-icon>
         </button>
@@ -65,7 +75,7 @@
                             {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
                       </div>
                     </div>
-                    <button mat-button color="primary" (click)="eliminarProcedimiento(procedimiento)">
+                    <button mat-mini-fab color="warn" (click)="confirmacionEliminacionProcedimiento(procedimiento)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>
@@ -95,7 +105,7 @@
         <mat-list style="height: 100%;">
           <div class="scroll-container-comentarios">
 
-            <div class="comment-list" #commentContainer (scroll)="onScroll($event)">
+            <div class="comment-list" #commentContainer>
               <div *ngFor="let comment of comentarios; let i = index"
                 [style.transform]="'translateY(' + (i * 80) + 'px)'">
                 <div class="comment">
@@ -108,7 +118,7 @@
                       </button>
                       <mat-menu #beforeMenu="matMenu" xPosition="before">
                         <button mat-menu-item (click)="openDialogComentario(comment)">Editar</button>
-                        <button mat-menu-item (click)="eliminarComentario(comment)">Eliminar</button>
+                        <button mat-menu-item (click)="confirmacionEliminacionComentario(comment)">Eliminar</button>
                       </mat-menu>
 
                     </span>

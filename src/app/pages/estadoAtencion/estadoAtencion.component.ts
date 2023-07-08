@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 import { EstadoAtencionEdicionComponent } from './estadoAtencion-edicion/estadoAtencion-edicion.component';
+import { ConfirmarEliminacionDialogComponent } from '../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
 
 @Component({
   selector: 'app-estadoAtencion',
@@ -19,7 +20,8 @@ export class EstadoAtencionComponent implements OnInit {
   displayedColumns: string[] = [
     'estado_atencion_id',
     'nombreEstadoAtencion',
-    'acciones',
+    'editar',
+    'eliminar'
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -65,21 +67,28 @@ export class EstadoAtencionComponent implements OnInit {
     });
   }
 
-  eliminar(estadoAtencion: EstadoAtencion) {
-    // this.estadoAtencionService.delete(id).subscribe(() => {
-    //   this.estadoAtencionService.listar().subscribe(data=>{
-    //     this.estadoAtencionService.setEstadoAtencionCambio(data);
-    //     this.estadoAtencionService.setMensajeCambio('Se eliminó.');
-    //   });
-    // });
+  openConfirmacionEliminacionDialog(estadoAtencion: EstadoAtencion): void {
+    const dialogRef = this.dialog.open(ConfirmarEliminacionDialogComponent, {
+      width: '400px',
+      data: {
+        message: `¿Estás seguro de eliminar el estado de atencion: '${estadoAtencion.nombreEstadoAtencion}'?`
+      }
+    });
 
-    //FORMA IDEAL
-    this.estadoAtencionService.delete(estadoAtencion.estado_atencion_id).pipe(switchMap(() => {
-      return this.estadoAtencionService.listar();
-    }))
-      .subscribe(data => {
-        this.estadoAtencionService.setEstadoAtencionCambio(data);
-        this.estadoAtencionService.setMensajeCambio('Se eliminó.');
-      });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.estadoAtencionService
+          .delete(estadoAtencion.estado_atencion_id)
+          .pipe(
+            switchMap(() => {
+              return this.estadoAtencionService.listar();
+            })
+          )
+          .subscribe((data) => {
+            this.estadoAtencionService.setEstadoAtencionCambio(data);
+            this.estadoAtencionService.setMensajeCambio('Se eliminó el estado de atencion seleccionado.');
+          });
+      }
+    });
   }
 }

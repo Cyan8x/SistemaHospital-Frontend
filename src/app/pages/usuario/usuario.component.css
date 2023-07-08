@@ -57,3 +57,9 @@ table {
   -webkit-hyphens: auto;
   hyphens: auto;
 }
+
+.selected-row,
+.selected-row:hover {
+  background-color: #3f51b52c !important; /* Aquí puedes especificar el color deseado */
+}
+

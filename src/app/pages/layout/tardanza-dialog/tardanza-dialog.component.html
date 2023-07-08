@@ -1,0 +1,22 @@
+<div style="margin: 20px;">
+  <h1>¿Deseas justificar tu tardanza?</h1>
+  <mat-divider></mat-divider>
+
+  <div>
+    <mat-form-field style="width: 100%;">
+      <mat-label>Justificacion</mat-label>
+      <textarea matInput placeholder="Justificacion" minlength="3" required [(ngModel)]="justificacion"
+        (ngModelChange)="validarInput()"></textarea>
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>SI</span>
+  </button>
+  <button mat-raised-button color="accent" (click)="cerrar()">
+    <mat-icon>close</mat-icon>
+    <span>NO</span>
+  </button>
+  <p>Recuerde que su justificacion será revisada por su jefe directo o por el administrador del sistema.</p>
+</div>

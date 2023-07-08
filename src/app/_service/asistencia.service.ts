@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Asistencia } from '../_model/asistencia';
-import { Subject } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SuccessMessage } from '../_model/succesMessageDto';
+import { JustificacionTardanza } from '../_model/justificacionTardanza';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,25 @@ export class AsistenciaService extends GenericService<Asistencia>{
     return this.http.get<SuccessMessage>(`${this.url}/verificar/${usuario_id}`);
   }
 
+  asistenciasOfUsuario(usuario_id: number) {
+    return this.http.get<Asistencia[]>(`${this.url}/usuario/${usuario_id}`);
+  }
+
+  cantidadAsistenciasPorEstado(usuario_id: number): Observable<Map<string, number>> {
+    return this.http.get<Map<string, number>>(`${this.url}/cantAsistUser/${usuario_id}`);
+  }
+
   registrarAsistenciaConValidaciones(usuario_id: number) {
-    return this.http.post(`${this.url}/registrarConValid/${usuario_id}`, null);
+    return this.http.post<SuccessMessage>(`${this.url}/registrarConValid/${usuario_id}`, null);
+  }
+
+  justificarTardanza(justificacionTardanza: JustificacionTardanza) {
+    return this.http.put<SuccessMessage>(`${this.url}/justificarTardanza`, justificacionTardanza);
+  }
+
+  //PDF
+  generarReporteAsistenciaUsuario(usuario_id: number){
+    return this.http.get(`${this.url}/genReportAsist/${usuario_id}`, {responseType: 'blob'});
   }
 
   getAsistenciaCambio() {

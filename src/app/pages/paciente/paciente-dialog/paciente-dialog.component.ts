@@ -63,7 +63,6 @@ export class PacienteDialogComponent implements OnInit {
     estadoAtencion.estado_atencion_id = this.idEstadoAtencionSeleccionado;
 
     this.paciente.estadoAtencion = estadoAtencion;
-    // console.log(this.paciente);
     this.paciente.esActivo = this.esActivo;
     this.paciente.esFavorito = false;
 
@@ -79,8 +78,6 @@ export class PacienteDialogComponent implements OnInit {
     }
 
     this.paciente.fechaCreacionPaciente = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-
-    console.log(this.paciente.fechaCreacionPaciente);
 
     if (this.paciente != null && this.paciente.paciente_id > 0) {
       //MODIFICAR
@@ -128,25 +125,29 @@ export class PacienteDialogComponent implements OnInit {
   }
 
   validarInput() {
+    if (this.data != null && this.data.paciente_id > 0) {
 
-    if (this.tipoSeleccionado == this.tiposDocumento[0]) {
-      if (this.paciente.nombresPaciente.trim() === '' ||
-        this.paciente.apellidosPaciente.trim() === '' ||
-        this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||
-        this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
-        this.verificar = true;
-      } else {
-        this.verificar = false;
+      if (this.tipoSeleccionado == this.tiposDocumento[0]) {
+        if (this.paciente.nombresPaciente.trim() === '' ||
+          this.paciente.apellidosPaciente.trim() === '' ||
+          this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||
+          this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
+          this.verificar = true;
+        } else {
+          this.verificar = false;
+        }
+      } else if (this.tipoSeleccionado == this.tiposDocumento[1]) {
+        if (this.paciente.nombresPaciente.trim() === '' ||
+          this.paciente.apellidosPaciente.trim() === '' ||
+          this.paciente.carneExtranjeria === null || this.paciente.carneExtranjeria === undefined ||
+          this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
+          this.verificar = true;
+        } else {
+          this.verificar = false;
+        }
       }
-    } else if (this.tipoSeleccionado == this.tiposDocumento[1]) {
-      if (this.paciente.nombresPaciente.trim() === '' ||
-        this.paciente.apellidosPaciente.trim() === '' ||
-        this.paciente.carneExtranjeria === null || this.paciente.carneExtranjeria === undefined ||
-        this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
-        this.verificar = true;
-      } else {
-        this.verificar = false;
-      }
+    }else{
+      this.verificar = false;
     }
 
   }

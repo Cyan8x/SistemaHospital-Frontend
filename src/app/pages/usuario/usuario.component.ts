@@ -8,6 +8,8 @@ import { switchMap } from 'rxjs';
 import { Usuario } from 'src/app/_model/usuario';
 import { UsuarioService } from 'src/app/_service/usuario.service';
 import { UsuarioDialogComponent } from './usuario-dialog/usuario-dialog.component';
+import { Router } from '@angular/router';
+import { ConfirmarEliminacionDialogComponent } from '../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
 
 @Component({
   selector: 'app-usuario',
@@ -16,17 +18,20 @@ import { UsuarioDialogComponent } from './usuario-dialog/usuario-dialog.componen
 })
 export class UsuarioComponent {
 
+  selectedRow: any;
+
   dataSource: MatTableDataSource<Usuario>;
   displayedColumns: string[] = [
     'usuario_id',
     'usuario',
-    'nombresUsuario',
-    'apellidosUsuario',
+    'nombreCompletoUsuario',
     'dniUsuario',
-    'emailUsuario',
-    'telefonoUsuario',
     'esActivoUsuario',
-    'acciones'
+    'rol',
+    'editar',
+    'eliminar',
+    'horario',
+    'menus'
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -35,7 +40,8 @@ export class UsuarioComponent {
   constructor(
     private usuarioService: UsuarioService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -70,17 +76,34 @@ export class UsuarioComponent {
     });
   }
 
-  eliminar(usuario: Usuario) {
-    this.usuarioService
-      .delete(usuario.usuario_id)
-      .pipe(
-        switchMap(() => {
-          return this.usuarioService.listar();
-        })
-      )
-      .subscribe((data) => {
-        this.usuarioService.setUsuarioCambio(data);
-        this.usuarioService.setMensajeCambio('Se eliminó.');
-      });
+  openConfirmacionEliminacionDialog(usuario: Usuario): void {
+    const dialogRef = this.dialog.open(ConfirmarEliminacionDialogComponent, {
+      width: '400px',
+      data: {
+        message: `¿Estás seguro de eliminar el usuario: '${usuario.usuario}'?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.usuarioService
+          .delete(usuario.usuario_id)
+          .pipe(
+            switchMap(() => {
+              return this.usuarioService.listar();
+            })
+          )
+          .subscribe((data) => {
+            this.usuarioService.setUsuarioCambio(data);
+            this.usuarioService.setMensajeCambio('Se eliminó Usuario.');
+          });
+
+        this.router.navigate(['/pages/usuario'])
+      }
+    });
+  }
+
+  selectRow(row: any) {
+    this.selectedRow = row;
   }
 }

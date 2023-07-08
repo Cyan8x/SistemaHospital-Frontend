@@ -1,0 +1,10 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title><u>Confirmación de Eliminacion</u></mat-card-title>
+    <mat-card-subtitle style="font-size: 17px; padding: 10px 0;">{{ data.message }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onConfirm()">Confirmar</button>
+    <button mat-raised-button color="accent" (click)="onCancel()">Cancelar</button>
+  </mat-card-actions>
+</mat-card>

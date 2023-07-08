@@ -8,6 +8,7 @@ import { PacienteService } from 'src/app/_service/paciente.service';
 import { PacienteDialogComponent } from './paciente-dialog/paciente-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs';
+import { ConfirmarEliminacionDialogComponent } from '../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
 
 @Component({
   selector: 'app-paciente',
@@ -18,18 +19,18 @@ export class PacienteComponent implements OnInit {
   dataSource: MatTableDataSource<Paciente>;
   displayedColumns: string[] = [
     'paciente_id',
-    'nombresPaciente',
-    'apellidosPaciente',
+    'nombreCompleto',
     'dniPaciente',
     'carneExtranjeria',
     // 'direccionPaciente',
-    'emailPaciente',
-    'telefonoPaciente',
+    // 'emailPaciente',
+    // 'telefonoPaciente',
     'esActivo',
     // 'esFavorito',
     'estadoAtencion',
     'usuarioCreador',
-    'acciones'
+    'editar',
+    'eliminar'
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -85,5 +86,30 @@ export class PacienteComponent implements OnInit {
         this.pacienteService.setPacienteCambio(data);
         this.pacienteService.setMensajeCambio('Se eliminó.');
       });
+  }
+
+  openConfirmacionEliminacionDialog(paciente: Paciente): void {
+    const dialogRef = this.dialog.open(ConfirmarEliminacionDialogComponent, {
+      width: '400px',
+      data: {
+        message: `¿Estás seguro de eliminar el paciente: '${paciente.nombresPaciente}  ${paciente.apellidosPaciente}'?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.pacienteService
+          .delete(paciente.paciente_id)
+          .pipe(
+            switchMap(() => {
+              return this.pacienteService.listar();
+            })
+          )
+          .subscribe((data) => {
+            this.pacienteService.setPacienteCambio(data);
+            this.pacienteService.setMensajeCambio('Se eliminó el paciente seleccionado.');
+          });
+      }
+    });
   }
 }

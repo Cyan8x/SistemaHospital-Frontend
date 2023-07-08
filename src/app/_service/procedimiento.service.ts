@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Procedimiento } from '../_model/procedimiento';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -11,6 +11,14 @@ import { environment } from 'src/environments/environment';
 export class ProcedimientoService extends GenericService<Procedimiento>{
 
   private procedimientoCambio: Subject<Procedimiento[]> = new Subject<
+    Procedimiento[]
+  >();
+
+  private procedimientoHoyCambio: Subject<Procedimiento[]> = new Subject<
+    Procedimiento[]
+  >();
+
+  private procedimientoCompletadosCambio: Subject<Procedimiento[]> = new Subject<
     Procedimiento[]
   >();
 
@@ -32,8 +40,21 @@ export class ProcedimientoService extends GenericService<Procedimiento>{
     return this.http.get<Procedimiento[]>(`${this.url}/terminadosPorPaciente/${paciente_id}`);
   }
 
-  selectProcedimientosPendientesPorUsuarioHoy(usuario_id: number) {
-    return this.http.get<Procedimiento[]>(`${this.url}/pendientesPorUsuario/hoy/${usuario_id}`);
+  selectProcedimientosPendientesPorUsuario(usuario_id: number) {
+    return this.http.get<Procedimiento[]>(`${this.url}/pendientesPorUsuario/${usuario_id}`);
+  }
+
+  listarProcedimientosTerminadosPorUsuario(usuario_id: number) {
+    return this.http.get<Procedimiento[]>(`${this.url}/terminadosPorUsuario/${usuario_id}`);
+  }
+
+  cantidadTerminadoPendientePorUsuario(usuario_id: number): Observable<Map<string, number>> {
+    return this.http.get<Map<string, number>>(`${this.url}/cantComplTermin/${usuario_id}`);
+  }
+
+  //PDF
+  generarReporteProcedimientosPaciente(paciente_id: number){
+    return this.http.get(`${this.url}/genReportProced/${paciente_id}`, {responseType: 'blob'});
   }
 
   getProcedimientoCambio() {
@@ -44,6 +65,21 @@ export class ProcedimientoService extends GenericService<Procedimiento>{
     this.procedimientoCambio.next(procedimientos);
   }
 
+  getProcedimientoHoyCambio() {
+    return this.procedimientoHoyCambio.asObservable();
+  }
+
+  setProcedimientoHoyCambio(procedimientos: Procedimiento[]) {
+    this.procedimientoHoyCambio.next(procedimientos);
+  }
+
+  getProcedimientoCompletadoCambio() {
+    return this.procedimientoCompletadosCambio.asObservable();
+  }
+
+  setProcedimientoCompleatadoCambio(procedimientos: Procedimiento[]) {
+    this.procedimientoCompletadosCambio.next(procedimientos);
+  }
   getMensajeCambio() {
     return this.mensajeCambio.asObservable();
   }

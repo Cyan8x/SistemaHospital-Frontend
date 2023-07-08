@@ -4,6 +4,7 @@ import { Menu } from '../_model/menu';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { SuccessMessage } from '../_model/succesMessageDto';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,10 @@ export class MenuService extends GenericService<Menu>{
     return this.http.post<Menu[]>(`${this.url}/${usuario}`,usuario,{
       headers: new HttpHeaders().set('Authorization', `bearer ${token}`).set('Content-Type', 'application/json')
     });
+  }
+
+  asignarMenusUsuario(usuario_id: number, menus: Menu[]) {
+    return this.http.post<SuccessMessage>(`${this.url}/agregarMenus/${usuario_id}`, menus);
   }
 
   getMenuCambio() {

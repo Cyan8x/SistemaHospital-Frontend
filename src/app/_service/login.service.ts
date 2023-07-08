@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginService {
 
-  private url: string = 'http://localhost:9090/oauth/token'
+  private url: string = `${environment.LOGIN_URL}/oauth/token`
 
   constructor(
     private http: HttpClient,

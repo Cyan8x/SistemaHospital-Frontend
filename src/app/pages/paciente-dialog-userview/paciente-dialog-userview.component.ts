@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Paciente } from 'src/app/_model/paciente';
 import { Procedimiento } from 'src/app/_model/procedimiento';
@@ -9,13 +9,23 @@ import { ComentarioService } from 'src/app/_service/comentario.service';
 import { Comentario } from 'src/app/_model/comentario';
 import { ComentarioDialogComponent } from './comentario-dialog/comentario-dialog.component';
 import { switchMap } from 'rxjs';
+import { UsuarioService } from 'src/app/_service/usuario.service';
+import { Notificacion } from 'src/app/_model/notificacion';
+import * as moment from 'moment';
+import { NotificacionService } from 'src/app/_service/notificacion.service';
+import { PacienteService } from 'src/app/_service/paciente.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
+import { Usuario } from 'src/app/_model/usuario';
+import { VerReporteProcedimientosComponent } from './ver-reporte-procedimientos/ver-reporte-procedimientos.component';
+import { ConfirmarEliminacionDialogComponent } from '../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
 
 @Component({
   selector: 'app-paciente-dialog-userview',
   templateUrl: './paciente-dialog-userview.component.html',
   styleUrls: ['./paciente-dialog-userview.component.css']
 })
-export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
+export class PacienteDialogUserviewComponent implements OnInit{
   paciente: Paciente;
   procedimientos: Procedimiento[];
   procedimientosPendientes: Procedimiento[];
@@ -36,6 +46,15 @@ export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
 
   mostrarBotonComentar: boolean = false;
 
+  notificacion: Notificacion;
+
+  acccionFavorite: string = "favorite";
+  colorFavorite: string = "accent";
+
+  usuarioLogueado: string;
+  usuario: Usuario;
+
+  mostrarBotonReporte: boolean;
 
   @ViewChild('commentContainer') commentContainer: ElementRef;
 
@@ -44,46 +63,51 @@ export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
     private procedimientoService: ProcedimientoService,
     private comentarioService: ComentarioService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private usuarioService: UsuarioService,
+    private notificacionService: NotificacionService,
+    private pacienteService: PacienteService
   ) {
   }
 
-
-
   ngOnInit(): void {
     this.paciente = { ...this.data };
+    if (this.data != null && this.data.paciente_id > 0) {
+      this.pacienteId = this.data.paciente_id;
+    }
+
+    const helper = new JwtHelperService();
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    const decodedToken = helper.decodeToken(token);
+    this.usuarioLogueado = decodedToken.user_name;
+
+    this.usuarioService.listarPorUsername(this.usuarioLogueado).subscribe(data => {
+      this.usuario = data;
+      this.pacienteService.selectFavoritosPorUsuario(this.usuario.usuario_id).subscribe(data => {
+        data.forEach((paciente) => {
+          if (paciente.paciente_id == this.data.paciente_id) {
+            this.acccionFavorite = "heart_broken";
+            this.colorFavorite = "primary";
+          }
+        });
+      });
+    });
 
     this.datosProcedimientosDePaciente();
     this.datosComentariosDePaciente();
-
     this.cantidadProcedimientosTerminados();
-
+    this.habilitarBotonReporte();
   }
 
-  ngAfterViewInit() {
-    this.scrollToBottom();
+  habilitarBotonReporte(){
+    this.procedimientoService.listarProcedimientosPorPaciente(this.paciente.paciente_id).subscribe(data =>{
+      if(data.length > 0){
+        this.mostrarBotonReporte = true;
+      }else{
+        this.mostrarBotonReporte = false;
+      }
+    })
   }
-
-  scrollToBottom() {
-    setTimeout(() => {
-      const container = this.commentContainer.nativeElement;
-      container.scrollTop = container.scrollHeight - container.clientHeight;
-    }, 0);
-  }
-
-  onScroll(event: Event) {
-    const element = event.target as HTMLElement;
-    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
-
-    if (!atBottom) {
-      // El scroll no está en la parte inferior, deshabilita el desplazamiento automático
-      this.disableScrollToBottom = true;
-    } else {
-      // El scroll está en la parte inferior
-      this.disableScrollToBottom = false;
-    }
-  }
-
 
   datosComentariosDePaciente() {
     this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id).subscribe((data) => {
@@ -106,6 +130,7 @@ export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
 
     this.procedimientoService.getProcedimientoCambio().subscribe((data) => {
       this.procedimientos = data;
+      this.habilitarBotonReporte();
     });
 
     this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id).subscribe((data) => {
@@ -149,10 +174,17 @@ export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
   }
 
   procedimientoTerminado(procedimiento: Procedimiento) {
+    let notificacion = new Notificacion();
+    notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+    notificacion.paciente = this.paciente;
+    notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
+    notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
     if (procedimiento.es_terminado) {
       procedimiento.es_terminado = false;
+      notificacion.causa = "Se volvió a abrir un procedimiento";
     } else {
       procedimiento.es_terminado = true;
+      notificacion.causa = "Se volvió a abrir un procedimiento";
     }
     this.procedimientoService
       .modificar(procedimiento)
@@ -168,6 +200,12 @@ export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
         this.procedimientoService.setProcedimientoCambio(data);
         this.procedimientoService.setMensajeCambio('Se modificó.');
         this.cantidadProcedimientosTerminados();
+
+        if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
+          this.notificacionService.registrar(notificacion).subscribe(data => {
+          });
+        }
+        this.habilitarBotonReporte();
       });
   }
 
@@ -186,28 +224,84 @@ export class PacienteDialogUserviewComponent implements OnInit, AfterViewInit {
     this.esClickeado = !this.esClickeado;
   }
 
-  eliminarProcedimiento(procedimiento: Procedimiento) {
-    this.procedimientoService.delete(procedimiento.procedimiento_id).pipe(switchMap(() => {
-      if (this.mostrarContenido == 'Mostrar Completados') {
-        return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
+  confirmacionEliminacionProcedimiento(procedimiento: Procedimiento): void {
+    const dialogRef = this.dialog.open(ConfirmarEliminacionDialogComponent, {
+      width: '400px',
+      data: {
+        message: `¿Estás seguro de eliminar el procedimiento?`
       }
-      return this.procedimientoService.listarProcedimientosPorPaciente(this.paciente.paciente_id);
-    }))
-      .subscribe(data => {
-        this.procedimientoService.setProcedimientoCambio(data);
-        this.procedimientoService.setMensajeCambio('Se eliminó.');
-        this.cantidadProcedimientosTerminados();
-      });
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let notificacion = new Notificacion();
+        notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+        notificacion.paciente = this.paciente;
+        notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
+        notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
+        notificacion.causa = "Se eliminó un procedimiento";
+
+        this.procedimientoService.delete(procedimiento.procedimiento_id).pipe(switchMap(() => {
+          if (this.mostrarContenido == 'Mostrar Completados') {
+            return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
+          }
+          return this.procedimientoService.listarProcedimientosPorPaciente(this.paciente.paciente_id);
+        }))
+          .subscribe(data => {
+            this.procedimientoService.setProcedimientoCambio(data);
+            this.procedimientoService.setMensajeCambio('Se eliminó.');
+            this.cantidadProcedimientosTerminados();
+
+            if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
+              this.notificacionService.registrar(notificacion).subscribe(data => {
+              });
+            }
+            this.habilitarBotonReporte();
+          });
+      }
+    });
   }
 
-  eliminarComentario(comentario: Comentario) {
-    this.comentarioService.delete(comentario.comentario_id).pipe(switchMap(() => {
-      return this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id);
-    }))
-      .subscribe(data => {
-        this.comentarioService.setComentarioCambio(data);
-        this.comentarioService.setMensajeCambio('Se eliminó.');
-      });
+  confirmacionEliminacionComentario(comentario: Comentario): void {
+    const dialogRef = this.dialog.open(ConfirmarEliminacionDialogComponent, {
+      width: '400px',
+      data: {
+        message: `¿Estás seguro de eliminar el comentario?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.comentarioService.delete(comentario.comentario_id).pipe(switchMap(() => {
+          return this.comentarioService.listarComentariosPorPaciente(this.paciente.paciente_id);
+        }))
+          .subscribe(data => {
+            this.comentarioService.setComentarioCambio(data);
+            this.comentarioService.setMensajeCambio('Se eliminó.');
+          });
+      }
+    });
   }
 
+  marcarFavoritoPorusuario(paciente_id: number) {
+    if (this.acccionFavorite == "heart_broken") {
+      this.pacienteService.deleteFavoritoPorUsuario(this.usuario.usuario_id, paciente_id).subscribe(data => {
+        this.acccionFavorite = "favorite";
+        this.colorFavorite = "accent";
+      });
+    } else {
+      this.pacienteService.insertFavoritoPorUsuario(this.usuario.usuario_id, paciente_id).subscribe(data => {
+        this.acccionFavorite = "heart_broken";
+        this.colorFavorite = "primary";
+      });
+    }
+  }
+
+  verReporteEnDialog() {
+    this.dialog.open(VerReporteProcedimientosComponent, {
+      width: '800px',
+      height: '800px',
+      data: this.pacienteId
+    });
+  }
 }

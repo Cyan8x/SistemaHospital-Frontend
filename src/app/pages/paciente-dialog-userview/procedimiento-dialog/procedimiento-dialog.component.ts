@@ -12,8 +12,9 @@ import {
 
 import { UntypedFormControl } from '@angular/forms';
 import * as moment from 'moment';
-import { Usuario } from 'src/app/_model/usuario';
 import { UsuarioService } from 'src/app/_service/usuario.service';
+import { Notificacion } from 'src/app/_model/notificacion';
+import { NotificacionService } from 'src/app/_service/notificacion.service';
 
 
 
@@ -41,14 +42,13 @@ export class ProcedimientoDialogComponent implements OnInit {
   datetimeFechaInicio = new UntypedFormControl();
   datetimeFechaFin = new UntypedFormControl();
 
-
-
   constructor(
     private dialogRef: MatDialogRef<ProcedimientoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any,
     private procedimientoService: ProcedimientoService,
     private renderer: Renderer2,
-    private usuarioService: UsuarioService) {
+    private usuarioService: UsuarioService,
+    private notificacionService:NotificacionService) {
 
   }
 
@@ -74,7 +74,16 @@ export class ProcedimientoDialogComponent implements OnInit {
     this.procedimiento.usuario = this.usuarioService.getUsuarioLogueado();
     this.procedimiento.es_terminado = false;
     this.procedimiento.usuario_creador = this.usuarioService.getUsuarioLogueado().usuario;
+
+    //CREANDO NOTIFICACION
+    let notificacion = new Notificacion();
+    notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+    notificacion.paciente = this.paciente;
+    notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
+    notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
+
     if (this.procedimiento != null && this.procedimiento.procedimiento_id > 0) {
+      notificacion.causa = "Se actualizó un procedimiento";
       //MODIFICAR
       this.procedimientoService
         .modificar(this.procedimiento)
@@ -86,8 +95,13 @@ export class ProcedimientoDialogComponent implements OnInit {
         .subscribe((data) => {
           this.procedimientoService.setProcedimientoCambio(data);
           this.procedimientoService.setMensajeCambio('Se modificó.');
+          if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
+            this.notificacionService.registrar(notificacion).subscribe(data=>{
+            });
+          }
         });
     } else {
+      notificacion.causa = "Se creó un procedimiento";
       //REGISTRAR
       this.procedimiento.fechaCreacionProced = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
       this.procedimientoService
@@ -100,6 +114,10 @@ export class ProcedimientoDialogComponent implements OnInit {
         .subscribe((data) => {
           this.procedimientoService.setProcedimientoCambio(data);
           this.procedimientoService.setMensajeCambio('Se registró.');
+          if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
+            this.notificacionService.registrar(notificacion).subscribe(data=>{
+            });
+          }
         });
     }
 

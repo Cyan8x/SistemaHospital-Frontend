@@ -9,9 +9,8 @@ import { LoginService } from 'src/app/_service/login.service';
 import { AsistenciaService } from 'src/app/_service/asistencia.service';
 import { UsuarioService } from 'src/app/_service/usuario.service';
 import { Usuario } from 'src/app/_model/usuario';
-import { Asistencia } from 'src/app/_model/asistencia';
-import * as moment from 'moment';
-import { EstadoAsistencia } from 'src/app/_model/estadoAsistencia';
+import { TardanzaDialogComponent } from './tardanza-dialog/tardanza-dialog.component';
+import { NotificacionService } from 'src/app/_service/notificacion.service';
 
 @Component({
   selector: 'app-layout',
@@ -24,6 +23,8 @@ export class LayoutComponent implements OnInit {
   usuario: Usuario;
   mostrarBotonAsistencia: boolean = true;
 
+  cantNotifi: number;
+
   menus: Menu[];
 
   constructor(
@@ -31,7 +32,8 @@ export class LayoutComponent implements OnInit {
     private menuService: MenuService,
     private loginService: LoginService,
     private asistenciaService: AsistenciaService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private notificacionService: NotificacionService
   ) { };
 
   ngOnInit(): void {
@@ -52,18 +54,38 @@ export class LayoutComponent implements OnInit {
             this.mostrarBotonAsistencia = true;
           }
         });
+
+        this.notificacionService.variable$.subscribe(valor =>{
+          this.cantNotifi = valor;
+        });
+
+        this.notificacionService.cantidadaNotificacionesPorUsuario(this.usuario.usuario_id).subscribe(data => {
+          if (data > 0) {
+            this.cantNotifi = data;
+          } else {
+            this.cantNotifi = null;
+          }
+        });
       }
     );
 
     this.menuService.listarPorUsuario(this.usuarioLogueado).subscribe(data => {
       this.menus = data;
     });
+  }
 
-
+  ngAfterViewChecked(){
+    // this.notificacionService.cantidadaNotificacionesPorUsuario(this.usuario.usuario_id).subscribe(data => {
+    //   if (data > 0) {
+    //     this.cantNotifi = data;
+    //   } else {
+    //     this.cantNotifi = null;
+    //   }
+    // });
   }
 
 
-  openDialog() {
+  buscarDialog() {
     this.dialog.open(BuscarComponent, {
       width: '100%',
       height: '95%'
@@ -75,8 +97,14 @@ export class LayoutComponent implements OnInit {
   }
 
   asistencia() {
-    this.asistenciaService.registrarAsistenciaConValidaciones(this.usuario.usuario_id).subscribe(data=>{
-      console.log(data);
+    this.asistenciaService.registrarAsistenciaConValidaciones(this.usuario.usuario_id).subscribe(data => {
+      if (data.message.includes("Tardanza")) {
+        this.dialog.open(TardanzaDialogComponent, {
+          width: '400px',
+          height: '400px',
+          data: this.usuario
+        });
+      }
     });
 
     setTimeout(() => {

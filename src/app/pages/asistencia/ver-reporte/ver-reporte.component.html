@@ -1,0 +1,9 @@
+<button mat-raised-button color="primary" (click)="descargarReporte(usuario_id)">Descargar Reporte</button>
+
+<!-- <pdf-viewer [src]="pdfSrc"
+              [render-text]="true"
+              [original-size]="false"
+              style="width: 400px; height: 500px"
+  ></pdf-viewer> -->
+
+<pdf-viewer *ngIf="pdfSrc" [src]="pdfSrc" [render-text]="true" style="width: 800px; height: 800px"></pdf-viewer>

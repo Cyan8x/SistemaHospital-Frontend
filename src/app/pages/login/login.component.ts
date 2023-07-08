@@ -52,9 +52,4 @@ export class LoginComponent {
       this.router.navigate(['/pages/inicio']);
     });
   }
-
-  // ngAfterViewInit() {
-  //   (window as any).initialize();
-  // }
-
 }

@@ -1,0 +1,33 @@
+<router-outlet></router-outlet>
+
+<mat-card>
+  <mat-card-content style="font-size: 30px; background-color: #333854; color: white;">Notificaciones</mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>
+<div style="margin: 30px; display: flex; justify-content: center;">
+  <div style="width: 80%;">
+    <mat-list>
+      <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let notificacion of notificaciones">
+        <span matListItemTitle>
+          <div style="display: flex; justify-content: space-around;   ">
+            <div style="display: flex;">
+              <div>
+                <a style="text-decoration: none; color: #000; cursor: pointer;" (click)="redireccionarConParametros(notificacion.paciente.paciente_id)">
+                  {{notificacion.causa}}
+                </a>
+                <span matListItemLine>Emisor: {{notificacion.usuarioOrigen.usuario}}</span>
+                <span matListItemLine>Paciente: {{notificacion.paciente.nombresPaciente}}</span>
+              </div>
+            </div>
+            <button mat-fab matTooltip="Primary" color="primary" (click)="marcarNotificacionVisto(notificacion)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </span>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+
+</div>

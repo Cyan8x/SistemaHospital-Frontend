@@ -3,7 +3,7 @@ import { GenericService } from './generic.service';
 import { Paciente } from '../_model/paciente';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,10 @@ export class PacienteService extends GenericService<Paciente>{
 
   deleteFavoritoPorUsuario(usuario_id: number, paciente_id: number) {
     return this.http.delete(`${this.url}/deleteFavoritos/${usuario_id}/${paciente_id}`);
+  }
+
+  cantidadPacientesPorEstado(): Observable<Map<string, number>> {
+    return this.http.get<Map<string, number>>(`${this.url}/cantPacieEstado`);
   }
 
   getPacienteCambio() {

@@ -1,0 +1,150 @@
+<div>
+  <button mat-raised-button color="primary" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>Guardar</span>
+  </button>
+  <button mat-raised-button color="warn" routerLink="/pages/usuario">
+    <mat-icon>close</mat-icon>
+    <span>Cancelar</span>
+  </button>
+  <mat-list role="list">
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoLunes" [checked]="esActivoLunes">Lunes
+      </mat-checkbox>
+      <div *ngIf="esActivoLunes">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoLunes [type]="type" [mode]="mode" [twelvehour]="true" [timeInterval]="1"
+            [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input matInput [mtxDatetimepicker]="timePickerIngresoLunes" [formControl]="timeIngresoLunes">
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoLunes" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaLunes [type]="type" [mode]="mode" [twelvehour]="true" [timeInterval]="1"
+            [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaLunes" [formControl]="timeSalidaLunes" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaLunes" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoMartes" [checked]="esActivoMartes">Martes</mat-checkbox>
+      <div *ngIf="esActivoMartes">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoMartes [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerIngresoMartes" [formControl]="timeIngresoMartes" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoMartes" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaMartes [type]="type" [mode]="mode" [twelvehour]="true" [timeInterval]="1"
+            [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaMartes" [formControl]="timeSalidaMartes" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaMartes" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoMiercoles"
+        [checked]="esActivoMiercoles">Miercoles</mat-checkbox>
+      <div *ngIf="esActivoMiercoles">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoMiercoles [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerIngresoMiercoles" [formControl]="timeIngresoMiercoles" matInput
+            required>
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoMiercoles" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaMiercoles [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaMiercoles" [formControl]="timeSalidaMiercoles" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaMiercoles" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoJueves" [checked]="esActivoJueves">Jueves</mat-checkbox>
+      <div *ngIf="esActivoJueves">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoJueves [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerIngresoJueves" [formControl]="timeIngresoJueves" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoJueves" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaJueves [type]="type" [mode]="mode" [twelvehour]="true" [timeInterval]="1"
+            [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaJueves" [formControl]="timeSalidaJueves" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaJueves" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoViernes"
+        [checked]="esActivoViernes">Viernes</mat-checkbox>
+      <div *ngIf="esActivoViernes">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoViernes [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerIngresoViernes" [formControl]="timeIngresoViernes" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoViernes" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaViernes [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaViernes" [formControl]="timeSalidaViernes" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaViernes" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoSabado" [checked]="esActivoSabado">Sabado</mat-checkbox>
+      <div *ngIf="esActivoSabado">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoSabado [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerIngresoSabado" [formControl]="timeIngresoSabado" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoSabado" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaSabado [type]="type" [mode]="mode" [twelvehour]="true" [timeInterval]="1"
+            [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaSabado" [formControl]="timeSalidaSabado" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaSabado" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+    <mat-list-item role="listitem" style="height: 100%;">
+      <mat-checkbox class="example-margin" [(ngModel)]="esActivoDomingo"
+        [checked]="esActivoDomingo">Domingo</mat-checkbox>
+      <div *ngIf="esActivoDomingo">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Inicio</mat-label>
+          <mtx-datetimepicker #timePickerIngresoDomingo [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerIngresoDomingo" [formControl]="timeIngresoDomingo" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerIngresoDomingo" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Hora Fin</mat-label>
+          <mtx-datetimepicker #timePickerSalidaDomingo [type]="type" [mode]="mode" [twelvehour]="true"
+            [timeInterval]="1" [touchUi]="false" [timeInput]="true"></mtx-datetimepicker>
+          <input [mtxDatetimepicker]="timePickerSalidaDomingo" [formControl]="timeSalidaDomingo" matInput required>
+          <mtx-datetimepicker-toggle [for]="timePickerSalidaDomingo" matSuffix></mtx-datetimepicker-toggle>
+        </mat-form-field>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

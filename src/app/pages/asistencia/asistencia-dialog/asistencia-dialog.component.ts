@@ -50,25 +50,12 @@ export class AsistenciaDialogComponent implements OnInit {
         .modificar(this.asistencia)
         .pipe(
           switchMap(() => {
-            return this.asistenciaService.listar();
+            return this.asistenciaService.asistenciasOfUsuario(this.asistencia.usuario.usuario_id);
           })
         )
         .subscribe((data) => {
           this.asistenciaService.setAsistenciaCambio(data);
           this.asistenciaService.setMensajeCambio('Se modificó.');
-        });
-    } else {
-      //REGISTRAR
-      this.asistenciaService
-        .registrar(this.asistencia)
-        .pipe(
-          switchMap(() => {
-            return this.asistenciaService.listar();
-          })
-        )
-        .subscribe((data) => {
-          this.asistenciaService.setAsistenciaCambio(data);
-          this.asistenciaService.setMensajeCambio('Se registró.');
         });
     }
 

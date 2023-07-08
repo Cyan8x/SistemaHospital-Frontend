@@ -25,6 +25,8 @@ import { MTX_DATETIME_FORMATS, MtxNativeDatetimeModule } from '@ng-matero/extens
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { MtxMomentDatetimeModule } from '@ng-matero/extensions-moment-adapter';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [],
@@ -53,7 +55,9 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     MatDatepickerModule,
     MtxDatetimepickerModule,
     MtxNativeDatetimeModule,
-    MtxMomentDatetimeModule
+    MtxMomentDatetimeModule,
+    MatBadgeModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },

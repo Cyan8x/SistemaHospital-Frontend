@@ -1,0 +1,75 @@
+<mat-card style="margin-top: 15px;">
+  <mat-card-content style="font-size: 30px; padding: 15px;"><b>Mi Trabajo</b></mat-card-content>
+  <mat-divider></mat-divider>
+  <div *ngIf="esconderGrafico" style="display: flex; justify-content: center; margin: 15px 0;">
+    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
+      [responsive]="chartOptions.responsive"></apx-chart>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-tab-group>
+    <mat-tab label="Pendientes">
+
+      <div style="margin: 15px;" *ngIf="vacioProcedimientoHoy">
+        Aun no tiene Procedimientos Pencientes.
+      </div>
+
+      <mat-list style="height: 100%;">
+        <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let procedimiento of procedimientosHoy">
+          <span matListItemTitle>
+            <div style="display: flex; justify-content: space-around;">
+              <div style="display: flex;">
+                <mat-checkbox class="example-margin" [checked]="procedimiento.es_terminado"
+                  (change)="procedimientoTerminadoDeHoy(procedimiento)">
+                </mat-checkbox>
+                <div>
+                  <a style="text-decoration: none; color: #000; cursor: pointer; font-size: 18px; font-weight: bolder;"
+                    (click)="redireccionarConParametros(procedimiento.paciente.paciente_id)">{{
+                    procedimiento.procedimiento }}</a>
+                  <span matListItemLine><b>Paciente:</b> {{procedimiento.paciente.nombresPaciente}}
+                    {{procedimiento.paciente.apellidosPaciente}}</span>
+                  <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.->
+                      {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
+                </div>
+              </div>
+              <button mat-mini-fab color="warn" (click)="openConfirmacionEliminacionDialog(procedimiento)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </span>
+        </mat-list-item>
+      </mat-list>
+    </mat-tab>
+
+    <mat-tab label="Completados">
+      <div style="margin: 15px;" *ngIf="vacioProcedimientosCompletados">
+        Aun no tiene Procedimientos Completados
+      </div>
+
+      <mat-list style="height: 100%;">
+        <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let procedimiento of procedimientosCompletados">
+          <span matListItemTitle>
+            <div style="display: flex; justify-content: space-around;">
+              <div style="display: flex;">
+                <mat-checkbox class="example-margin" [checked]="procedimiento.es_terminado"
+                  (change)="procedimientoTerminadoDeCompletados(procedimiento)">
+                </mat-checkbox>
+                <div>
+                  <a style="text-decoration: none; color: #000; cursor: pointer; font-size: 18px; font-weight: bolder;"
+                    (click)="redireccionarConParametros(procedimiento.paciente.paciente_id)">{{
+                    procedimiento.procedimiento }}</a>
+                  <span matListItemLine><b>Paciente:</b> {{procedimiento.paciente.nombresPaciente}}
+                    {{procedimiento.paciente.apellidosPaciente}}</span>
+                  <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.->
+                      {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
+                </div>
+              </div>
+              <button mat-mini-fab color="warn" (click)="openConfirmacionEliminacionDialog(procedimiento)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </span>
+        </mat-list-item>
+      </mat-list>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

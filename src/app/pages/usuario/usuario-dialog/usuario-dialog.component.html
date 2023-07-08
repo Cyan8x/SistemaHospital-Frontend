@@ -8,9 +8,13 @@
         (ngModelChange)="validarInput()">
     </mat-form-field>
 
-    <mat-form-field class="example-full-width">
+
+    <button *ngIf="tipo == 'Edicion'" style="margin-bottom: 10px;" mat-stroked-button [color]="color"
+      (click)="toggleInput()">{{ textoBoton }}</button>
+
+    <mat-form-field class="example-full-width" *ngIf="mostrarInput || tipo == 'Registro'">
       <mat-label>Password</mat-label>
-      <input type="password" matInput placeholder="Password" minlength="3" required [(ngModel)]="usuario.password"
+      <input type="password" matInput placeholder="Password" minlength="3" required [(ngModel)]="passwordUsuario"
         (ngModelChange)="validarInput()">
     </mat-form-field>
 
@@ -45,8 +49,16 @@
     </mat-form-field>
 
     <section class="example-section">
-      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo" (change)="validarInput()">Es Activo</mat-checkbox>
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo"
+        (change)="validarInput()">Es Activo</mat-checkbox>
     </section>
+
+    <mat-form-field>
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="rolSeleccionado" [(value)]="rolSeleccionado" (ngModelChange)="validarCambio($event)">
+        <mat-option *ngFor="let rol of roles" [value]="rol">{{ rol.descripcionRol }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
   </div>
 

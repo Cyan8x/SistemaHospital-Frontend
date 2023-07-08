@@ -32,14 +32,21 @@
     <mat-sidenav #sidenav style="width: 200px" mode="push">
       <img src="assets/img/logo2SinBg.png" width="128" style="margin: 20px 0 20px 30px" />
 
-      <button mat-menu-item (click)="sidenav.toggle()" (click)="openDialog()" style="cursor: pointer">
+      <button mat-menu-item (click)="sidenav.toggle()" (click)="buscarDialog()" style="cursor: pointer">
         <mat-icon>search</mat-icon>
         <span>Buscar</span>
       </button>
 
       <div *ngFor="let m of menus">
         <button mat-menu-item (click)="sidenav.toggle()" routerLink="{{m.urlMenu}}" style="cursor: pointer">
-          <mat-icon>{{m.iconoMenu}}</mat-icon>
+          <ng-container *ngIf="m.nombreMenu === 'Notificaciones'; else otroIcono">
+            <mat-icon style="margin: 16px 16px 0 1px;" [matBadge]="cantNotifi > 0 ? cantNotifi : null"
+              matBadgeColor="warn">{{m.iconoMenu}}</mat-icon>
+          </ng-container>
+
+          <ng-template #otroIcono>
+            <mat-icon>{{m.iconoMenu}}</mat-icon>
+          </ng-template>
           <span>{{m.nombreMenu}}</span>
         </button>
       </div>

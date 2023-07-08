@@ -9,9 +9,12 @@ export class Usuario {
   dniUsuario: string;
   emailUsuario: string;
   telefonoUsuario: string;
+  fechaCreacionUsuario:string;
 
 	esActivoUsuario: boolean;
-  
+
+  rol: Rol;
+
 	esActivoLunes: boolean;
 	esActivoMartes: boolean;
 	esActivoMiercoles: boolean;

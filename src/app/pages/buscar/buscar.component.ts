@@ -4,7 +4,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { NavigationExtras, Router } from '@angular/router';
 import { Paciente } from 'src/app/_model/paciente';
+import { Usuario } from 'src/app/_model/usuario';
 import { PacienteService } from 'src/app/_service/paciente.service';
+import { UsuarioService } from 'src/app/_service/usuario.service';
 
 @Component({
   selector: 'app-buscar',
@@ -12,11 +14,13 @@ import { PacienteService } from 'src/app/_service/paciente.service';
   styleUrls: ['./buscar.component.css']
 })
 export class BuscarComponent implements OnInit {
+  usuario_id: number;
+  usuarios:Usuario[];
   dataSource: MatTableDataSource<Paciente>;
   displayedColumns: string[] = [
     'index',
     'nombreCompletoPaciente',
-    'dniPaciente',
+    'Documento',
     'estadoAtencion',
     'Acceder'
   ];
@@ -25,12 +29,17 @@ export class BuscarComponent implements OnInit {
 
   constructor(
     private pacienteService: PacienteService,
-    private router: Router
+    private router: Router,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     this.pacienteService.listar().subscribe((data) => {
       this.crearTabla(data);
+    });
+
+    this.usuarioService.listar().subscribe(data =>{
+      this.usuarios = data;
     });
   }
 

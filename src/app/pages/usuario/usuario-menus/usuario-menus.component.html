@@ -1,0 +1,18 @@
+<div>
+  <button mat-raised-button color="primary" (click)="operar()">
+    <mat-icon>done</mat-icon>
+    <span>Guardar</span>
+  </button>
+  <button mat-raised-button color="warn" routerLink="/pages/usuario">
+    <mat-icon>close</mat-icon>
+    <span>Cancelar</span>
+  </button>
+
+  <section class="example-section">
+    <div *ngFor="let menu of menus">
+      <mat-checkbox [ngModel]="menuSeleccionado(menu)" (change)="toggleSeleccion(menu)">
+        {{ menu.nombreMenu }}
+      </mat-checkbox>
+    </div>
+  </section>
+</div>
