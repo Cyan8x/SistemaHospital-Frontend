@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Menu } from 'src/app/_model/menu';
 import { MenuService } from 'src/app/_service/menu.service';
@@ -11,12 +12,13 @@ import { UsuarioService } from 'src/app/_service/usuario.service';
 })
 export class UsuarioMenusComponent implements OnInit {
   menus: Menu[];
-  menusUsuario: Menu[]=[];
+  menusUsuario: Menu[] = [];
   usuario_id: number;
 
   constructor(private usuarioService: UsuarioService,
     private route: ActivatedRoute,
     private menuService: MenuService,
+    private dialog: MatDialog,
     private router: Router) {
 
   }
@@ -51,7 +53,8 @@ export class UsuarioMenusComponent implements OnInit {
   }
 
   operar() {
-    this.menuService.asignarMenusUsuario(this.usuario_id,this.menusUsuario).subscribe(data =>{
+    this.menuService.asignarMenusUsuario(this.usuario_id, this.menusUsuario).subscribe(data => {
+      this.usuarioService.successMessageDialog("Se asignaron correctamente los menus al usuario.", this.dialog);
     });
     this.router.navigate(['/pages/usuario']);
   }

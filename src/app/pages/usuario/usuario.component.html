@@ -23,9 +23,14 @@
       <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="nombreCompletoUsuario">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Completo </th>
-      <td mat-cell *matCellDef="let element"> {{element.nombresUsuario}} {{element.apellidosUsuario}} </td>
+    <ng-container matColumnDef="nombreUsuario">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+      <td mat-cell *matCellDef="let element"> {{element.nombresUsuario}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="apellidoUsuario">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+      <td mat-cell *matCellDef="let element"> {{element.apellidosUsuario}} </td>
     </ng-container>
 
     <ng-container matColumnDef="dniUsuario">
@@ -57,14 +62,14 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="eliminar">
+    <!-- <ng-container matColumnDef="eliminar">
       <th mat-header-cell *matHeaderCellDef> Eliminar </th>
       <td mat-cell *matCellDef="let element">
         <button mat-mini-fab color="warn" (click)="openConfirmacionEliminacionDialog(element)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="horario">
       <th mat-header-cell *matHeaderCellDef> Horario </th>
@@ -89,7 +94,7 @@
 
   </table>
 
-  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10]" [length]="cantidadDatos" (page)="mostrarMas($event)"></mat-paginator>
 
   <button mat-fab color="accent" style="float: right" (click)="openDialog()">
     <mat-icon>add</mat-icon>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Observable, switchMap } from 'rxjs';
 import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { Paciente } from 'src/app/_model/paciente';
@@ -8,6 +8,7 @@ import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 import { PacienteService } from 'src/app/_service/paciente.service';
 import * as moment from 'moment';
 import { UsuarioService } from 'src/app/_service/usuario.service';
+import { SuccessMessageDialogComponent } from '../../success-message-dialog/success-message-dialog.component';
 
 @Component({
   selector: 'app-paciente-dialog',
@@ -35,6 +36,7 @@ export class PacienteDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<PacienteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Paciente,
+    private dialog: MatDialog,
     private pacienteService: PacienteService,
     private estadoAtencionService: EstadoAtencionService,
     private usuarioService: UsuarioService) {
@@ -59,10 +61,14 @@ export class PacienteDialogComponent implements OnInit {
   }
 
   operar() {
-    let estadoAtencion = new EstadoAtencion();
-    estadoAtencion.estado_atencion_id = this.idEstadoAtencionSeleccionado;
+    if (this.idEstadoAtencionSeleccionado != null) {
+      let estadoAtencion = new EstadoAtencion();
+      estadoAtencion.estado_atencion_id = this.idEstadoAtencionSeleccionado;
+      this.paciente.estadoAtencion = estadoAtencion;
+    } else {
+      this.paciente.estadoAtencion = null;
+    }
 
-    this.paciente.estadoAtencion = estadoAtencion;
     this.paciente.esActivo = this.esActivo;
     this.paciente.esFavorito = false;
 
@@ -77,7 +83,14 @@ export class PacienteDialogComponent implements OnInit {
       this.paciente.dniPaciente = null;
     }
 
-    this.paciente.fechaCreacionPaciente = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+    if(this.paciente.direccionPaciente == ''){
+      this.paciente.direccionPaciente = null;
+    }
+    if (this.paciente.emailPaciente == '') {
+      this.paciente.emailPaciente = null;
+    }
+
+
 
     if (this.paciente != null && this.paciente.paciente_id > 0) {
       //MODIFICAR
@@ -98,58 +111,31 @@ export class PacienteDialogComponent implements OnInit {
         .modificar(this.paciente)
         .pipe(
           switchMap(() => {
-            return this.pacienteService.listar();
+            return this.pacienteService.listarPagination(0,10);
           })
         )
         .subscribe((data) => {
           this.pacienteService.setPacienteCambio(data);
-          this.pacienteService.setMensajeCambio('Se modificó.');
+          this.pacienteService.successMessageDialog('Se actualizó el paciente exitosamente.', this.dialog);
+          this.cerrar();
         });
     } else {
       //REGISTRAR
+      this.paciente.fechaCreacionPaciente = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
       this.paciente.usuario = this.usuarioService.getUsuarioLogueado();
       this.pacienteService
         .registrar(this.paciente)
         .pipe(
           switchMap(() => {
-            return this.pacienteService.listar();
+            return this.pacienteService.listarPagination(0,10);
           })
         )
         .subscribe((data) => {
           this.pacienteService.setPacienteCambio(data);
-          this.pacienteService.setMensajeCambio('Se registró.');
+          this.pacienteService.successMessageDialog('Se registró el paciente exitosamente.', this.dialog);
+          this.cerrar();
         });
     }
-
-    this.cerrar();
-  }
-
-  validarInput() {
-    if (this.data != null && this.data.paciente_id > 0) {
-
-      if (this.tipoSeleccionado == this.tiposDocumento[0]) {
-        if (this.paciente.nombresPaciente.trim() === '' ||
-          this.paciente.apellidosPaciente.trim() === '' ||
-          this.paciente.dniPaciente === null || this.paciente.dniPaciente === undefined ||
-          this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
-          this.verificar = true;
-        } else {
-          this.verificar = false;
-        }
-      } else if (this.tipoSeleccionado == this.tiposDocumento[1]) {
-        if (this.paciente.nombresPaciente.trim() === '' ||
-          this.paciente.apellidosPaciente.trim() === '' ||
-          this.paciente.carneExtranjeria === null || this.paciente.carneExtranjeria === undefined ||
-          this.idEstadoAtencionSeleccionado === null || this.idEstadoAtencionSeleccionado === undefined) {
-          this.verificar = true;
-        } else {
-          this.verificar = false;
-        }
-      }
-    }else{
-      this.verificar = false;
-    }
-
   }
 
   cerrar() {

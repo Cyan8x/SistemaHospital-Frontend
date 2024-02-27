@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { Rol } from 'src/app/_model/rol';
 import { Usuario } from 'src/app/_model/usuario';
@@ -40,6 +40,7 @@ export class UsuarioDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<UsuarioDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Usuario,
     private usuarioService: UsuarioService,
+    private dialog: MatDialog,
     private rolService: RolService,
     private menuService: MenuService) {
 
@@ -99,9 +100,10 @@ export class UsuarioDialogComponent implements OnInit {
         )
         .subscribe((data) => {
           this.usuarioService.setUsuarioCambio(data);
-          this.usuarioService.setMensajeCambio('Se modificó.');
+          this.usuarioService.successMessageDialog("Se modificó correctamente el usuario.", this.dialog);
           this.menuService.asignarMenusUsuario(this.usuario.usuario_id,this.menus).subscribe(data=>{
           });
+          this.cerrar();
         });
     } else {
       //REGISTRAR
@@ -116,36 +118,9 @@ export class UsuarioDialogComponent implements OnInit {
         )
         .subscribe((data) => {
           this.usuarioService.setUsuarioCambio(data);
-          this.usuarioService.setMensajeCambio('Se registró.');
+          this.usuarioService.successMessageDialog("Se registró correctamente el usuario.", this.dialog);
+          this.cerrar();
         });
-    }
-
-    this.cerrar();
-  }
-
-  validarInput() {
-    if (this.data != null && this.data.usuario_id > 0) {
-      if (this.usuario.usuario.trim() === '' ||
-        this.usuario.password.trim() === '' ||
-        this.usuario.nombresUsuario.trim() === '' ||
-        this.usuario.apellidosUsuario.trim() === '' ||
-        this.usuario.dniUsuario === null || this.usuario.dniUsuario === undefined) {
-        this.verificar = true;
-      } else {
-        this.verificar = false;
-      }
-    }else{
-      this.verificar = false;
-    }
-  }
-
-  validarCambio(nuevoValor: Rol) {
-    if (this.tipo == 'Edicion') {
-      if (nuevoValor.rol_id !== this.usuario.rol.rol_id) {
-        this.verificar = false;
-      } else {
-        this.verificar = true;
-      }
     }
   }
 

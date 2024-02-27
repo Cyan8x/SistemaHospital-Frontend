@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Subject } from 'rxjs';
 import { SpinnerService } from 'src/app/_service/spinner.service';
 
 @Component({
@@ -6,15 +7,12 @@ import { SpinnerService } from 'src/app/_service/spinner.service';
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.css']
 })
-export class SpinnerComponent implements OnInit {
+export class SpinnerComponent {
 
-  isLoading$ = this.spinnerService.isLoading$;
+  isLoading$ = new Subject<boolean>();
 
-  constructor(private spinnerService: SpinnerService){
-
-  }
-
-  ngOnInit(): void {
+  constructor(private readonly spinnerService: SpinnerService) {
+    this.isLoading$ = this.spinnerService.isLoading$;
   }
 
 }

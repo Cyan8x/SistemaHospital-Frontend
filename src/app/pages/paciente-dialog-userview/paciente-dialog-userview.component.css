@@ -13,25 +13,28 @@
 }
 
 .div1 {
+  height: 100%;
   grid-area: 1 / 1 / 2 / 2;
 }
 .div2 {
+  height: 100%;
   grid-area: 1 / 2 / 2 / 3;
 }
 
 .parent-infoPaciente {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
-  grid-row-gap: 0px;
+  grid-row-gap: 5px;
+  max-width: 100%;
 }
 
 .div1-info {
   grid-area: 1 / 1 / 2 / 2;
 }
 .div2-procedimientos {
-  grid-area: 2 / 1 / 3 / 2;
+  grid-area: 2 / 1 / 4 / 2;
 }
 
 .procedimientos {
@@ -64,11 +67,12 @@
   overflow-y: auto; /* Habilita el desplazamiento vertical */
 }
 .scroll-container-procedimientos {
-  height: 100%; /* Altura deseada para el contenedor */
+  height: 500px; /* Altura deseada para el contenedor */
   overflow-y: auto; /* Habilita el desplazamiento vertical */
+  padding: 0 15px;
 }
 .scroll-container-comentarios {
-  height: 100%; /* Altura deseada para el contenedor */
+  height: 900px; /* Altura deseada para el contenedor */
   overflow-y: auto; /* Habilita el desplazamiento vertical */
 }
 
@@ -84,16 +88,15 @@ mat-card {
   visibility: visible;
 } */
 
-
-.comment-list {
-  height: 100%; /* Ajusta la altura según tus necesidades */
-  overflow-y: auto;
+.fondo{
+  background-color: #3f51b52b;
 }
 
 .comment {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
+  display: grid;
 }
 
 @media only screen and (max-width: 1100px) {

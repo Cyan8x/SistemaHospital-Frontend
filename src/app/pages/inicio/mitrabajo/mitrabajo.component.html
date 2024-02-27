@@ -10,7 +10,7 @@
     <mat-tab label="Pendientes">
 
       <div style="margin: 15px;" *ngIf="vacioProcedimientoHoy">
-        Aun no tiene Procedimientos Pencientes.
+        Aun no tiene Procedimientos Pendientes.
       </div>
 
       <mat-list style="height: 100%;">
@@ -22,13 +22,13 @@
                   (change)="procedimientoTerminadoDeHoy(procedimiento)">
                 </mat-checkbox>
                 <div>
-                  <a style="text-decoration: none; color: #000; cursor: pointer; font-size: 18px; font-weight: bolder;"
-                    (click)="redireccionarConParametros(procedimiento.paciente.paciente_id)">{{
+                  <a style="text-decoration: none; color: #000; cursor: pointer; font-size: 18px; font-weight: bolder; white-space: normal;"
+                    (click)="openDialogProcedimiento(procedimiento)">{{
                     procedimiento.procedimiento }}</a>
                   <span matListItemLine><b>Paciente:</b> {{procedimiento.paciente.nombresPaciente}}
                     {{procedimiento.paciente.apellidosPaciente}}</span>
-                  <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.->
-                      {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
+                  <span matListItemLine>{{ formatDate.formatDate(procedimiento.fechaHoraInicio) }} <-.->
+                      {{ formatDate.formatDate(procedimiento.fechaHoraFin) }}</span>
                 </div>
               </div>
               <button mat-mini-fab color="warn" (click)="openConfirmacionEliminacionDialog(procedimiento)">
@@ -54,13 +54,13 @@
                   (change)="procedimientoTerminadoDeCompletados(procedimiento)">
                 </mat-checkbox>
                 <div>
-                  <a style="text-decoration: none; color: #000; cursor: pointer; font-size: 18px; font-weight: bolder;"
-                    (click)="redireccionarConParametros(procedimiento.paciente.paciente_id)">{{
+                  <a style="text-decoration: none; color: #000; cursor: pointer; font-size: 18px; font-weight: bolder; white-space: normal;"
+                    (click)="openDialogProcedimiento(procedimiento)">{{
                     procedimiento.procedimiento }}</a>
                   <span matListItemLine><b>Paciente:</b> {{procedimiento.paciente.nombresPaciente}}
                     {{procedimiento.paciente.apellidosPaciente}}</span>
-                  <span matListItemLine>{{procedimiento.fechaHoraInicio | date:'dd-MM-yyyy HH:mm' }} <-.->
-                      {{procedimiento.fechaHoraFin | date:'dd-MM-yyyy HH:mm'}}</span>
+                  <span matListItemLine>{{ formatDate.formatDate(procedimiento.fechaHoraInicio) }} <-.->
+                      {{ formatDate.formatDate(procedimiento.fechaHoraFin) }}</span>
                 </div>
               </div>
               <button mat-mini-fab color="warn" (click)="openConfirmacionEliminacionDialog(procedimiento)">

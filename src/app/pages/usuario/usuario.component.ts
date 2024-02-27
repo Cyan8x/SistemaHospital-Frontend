@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,15 +24,19 @@ export class UsuarioComponent {
   displayedColumns: string[] = [
     'usuario_id',
     'usuario',
-    'nombreCompletoUsuario',
+    'nombreUsuario',
+    'apellidoUsuario',
     'dniUsuario',
     'esActivoUsuario',
     'rol',
     'editar',
-    'eliminar',
     'horario',
     'menus'
   ];
+
+  cantidadDatos: number = 0;
+  numPagina: any;
+  sizePagina: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -46,26 +50,35 @@ export class UsuarioComponent {
 
   ngOnInit(): void {
     this.usuarioService.getUsuarioCambio().subscribe((data) => {
-      this.crearTabla(data);
+      this.crearTablaPagination();
     });
 
     this.usuarioService.getMensajeCambio().subscribe((data) => {
       this.snackBar.open(data, 'AVISO', { duration: 2000 });
     });
 
-    this.usuarioService.listar().subscribe((data) => {
-      this.crearTabla(data);
-    });
+    this.crearTablaPagination();
   }
 
   filtrar(e: any) {
+    if(e.target.value == ''){
+      this.crearTablaPagination();
+    }
     this.dataSource.filter = e.target.value.trim().toLowerCase();
+    this.cantidadDatos = this.dataSource.filteredData.length;
   }
 
   crearTabla(data: Usuario[]) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  crearTablaPagination() {
+    this.usuarioService.listarPagination(this.numPagina,this.sizePagina).subscribe((data) => {
+      this.cantidadDatos = data.totalElements;
+      this.dataSource = new MatTableDataSource(data.content);
+    });
   }
 
   openDialog(usuario?: Usuario) {
@@ -105,5 +118,15 @@ export class UsuarioComponent {
 
   selectRow(row: any) {
     this.selectedRow = row;
+  }
+
+  mostrarMas(e: PageEvent){
+    this.usuarioService.listarPagination(e.pageIndex, e.pageSize).subscribe(data =>{
+      this.cantidadDatos = data.totalElements;
+      this.dataSource = new MatTableDataSource(data.content);
+
+      this.numPagina = e.pageIndex;
+      this.sizePagina = e.pageSize;
+    });
   }
 }

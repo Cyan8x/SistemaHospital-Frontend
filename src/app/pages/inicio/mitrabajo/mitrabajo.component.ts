@@ -4,7 +4,7 @@ import { Procedimiento } from 'src/app/_model/procedimiento';
 import * as moment from 'moment';
 import { switchMap } from 'rxjs';
 import { NotificacionService } from 'src/app/_service/notificacion.service';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Usuario } from 'src/app/_model/usuario';
 import { UsuarioService } from 'src/app/_service/usuario.service';
 
@@ -17,6 +17,8 @@ import {
 import { ProcedimientoService } from 'src/app/_service/procedimiento.service';
 import { ConfirmarEliminacionDialogComponent } from '../../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FormatDateService } from 'src/app/_service/format-date.service';
+import { ProcedimientoDialogComponent } from '../../paciente-dialog-userview/procedimiento-dialog/procedimiento-dialog.component';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -50,10 +52,10 @@ export class MitrabajoComponent implements OnInit {
 
   constructor(private procedimientoService: ProcedimientoService,
     private notificacionService: NotificacionService,
-    private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private usuarioService: UsuarioService) {
+    private usuarioService: UsuarioService,
+    public formatDate: FormatDateService) {
     this.chartOptions = {
       series: this.seriesProcedimientoCant,
       chart: {
@@ -80,7 +82,9 @@ export class MitrabajoComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(data => {
       this.usuario_id = data['id'];
-      this.verificarCantProcedimientos(this.usuario_id);
+      this.procedimientoService.verificarCantProcedimientos(this.usuario_id).subscribe(result => {
+        this.esconderGrafico = result;
+      });
       this.verificarProcedimientosTerminados(this.usuario_id);
       this.verificarProcedimientosPendientes(this.usuario_id);
 
@@ -108,25 +112,6 @@ export class MitrabajoComponent implements OnInit {
         this.procedimientosCompletados = data;
       });
     });
-  }
-
-  verificarCantProcedimientos(usuario_id: number) {
-    this.procedimientoService.cantidadTerminadoPendientePorUsuario(usuario_id).subscribe(data => {
-      if (data != null) {
-        let cantidadTotal = 0;
-        for (const clave in data) {
-          if (data.hasOwnProperty(clave)) {
-            const valor = data[clave];
-            cantidadTotal = cantidadTotal + valor;
-          }
-        }
-        if (cantidadTotal > 0) {
-          this.esconderGrafico = true;
-        } else {
-          this.esconderGrafico = false;
-        }
-      }
-    })
   }
 
   verificarProcedimientosTerminados(usuario_id: number) {
@@ -186,19 +171,32 @@ export class MitrabajoComponent implements OnInit {
     });
   }
 
-  redireccionarConParametros(paciente_id: number) {
-    const currentRoute: NavigationExtras = {
-      state: {
-        urlAnterior: this.router.url
+  openDialogProcedimiento(procedimiento?: Procedimiento) {
+    let dialogRef = this.dialog.open(ProcedimientoDialogComponent, {
+      width: '50%',
+      height: '90%',
+      data: {
+        procedimiento: procedimiento,
+        paciente: procedimiento.paciente
       }
-    };
-    this.router.navigate(['/pages/paciente-userview', paciente_id], currentRoute);
+    });
+
+    dialogRef.afterClosed().subscribe(()=>{
+      this.procedimientoService.selectProcedimientosPendientesPorUsuario(this.usuario.usuario_id).subscribe((data) => {
+        this.procedimientosHoy = data;
+      })
+
+      this.procedimientoService.listarProcedimientosTerminadosPorUsuario(this.usuario.usuario_id).subscribe((data) => {
+        this.procedimientosCompletados = data;
+      })
+      this.definirGrafico(this.usuario.usuario_id);
+    });
   }
 
   prepararNotificacion(procedimiento: Procedimiento) {
     let notificacion = new Notificacion();
     notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-    notificacion.paciente = procedimiento.paciente;
+    notificacion.procedimiento = procedimiento;
     notificacion.usuarioOrigen = this.usuario;
     notificacion.usuarioDestino = procedimiento.paciente.usuario.usuario_id;
     if (procedimiento.es_terminado) {
@@ -235,7 +233,9 @@ export class MitrabajoComponent implements OnInit {
           });
         }
         this.definirGrafico(this.usuario.usuario_id);
-        this.verificarCantProcedimientos(this.usuario_id);
+        this.procedimientoService.verificarCantProcedimientos(this.usuario_id).subscribe(result => {
+          this.esconderGrafico = result;
+        });
         this.verificarProcedimientosTerminados(this.usuario_id);
         this.verificarProcedimientosPendientes(this.usuario_id);
       });
@@ -265,8 +265,9 @@ export class MitrabajoComponent implements OnInit {
           });
         }
         this.definirGrafico(this.usuario.usuario_id);
-        this.verificarCantProcedimientos(this.usuario_id);
-
+        this.procedimientoService.verificarCantProcedimientos(this.usuario_id).subscribe(result => {
+          this.esconderGrafico = result;
+        });
         this.verificarProcedimientosTerminados(this.usuario_id);
         this.verificarProcedimientosPendientes(this.usuario_id);
       });
@@ -284,7 +285,7 @@ export class MitrabajoComponent implements OnInit {
       if (result) {
         let notificacion = new Notificacion();
         notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-        notificacion.paciente = procedimiento.paciente;
+        notificacion.procedimiento = procedimiento;
         notificacion.usuarioOrigen = this.usuario;
         notificacion.usuarioDestino = procedimiento.paciente.usuario.usuario_id;
         notificacion.causa = "Se eliminó un procedimiento";
@@ -310,7 +311,9 @@ export class MitrabajoComponent implements OnInit {
             }
 
             this.definirGrafico(this.usuario.usuario_id);
-            this.verificarCantProcedimientos(this.usuario_id);
+            this.procedimientoService.verificarCantProcedimientos(this.usuario_id).subscribe(result => {
+              this.esconderGrafico = result;
+            });
             this.verificarProcedimientosTerminados(this.usuario_id);
             this.verificarProcedimientosPendientes(this.usuario_id);
           });

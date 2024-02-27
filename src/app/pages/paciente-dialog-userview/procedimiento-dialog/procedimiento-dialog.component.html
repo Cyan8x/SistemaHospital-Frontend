@@ -1,3 +1,9 @@
+<div *ngIf="edicionPaciente">
+  <button style="width: 100%;" mat-stroked-button color="primary" (click)="redireccionarConParametros(procedimiento.paciente.paciente_id)">
+    <mat-icon>keyboard_return</mat-icon>
+    <span>Regresar a {{procedimiento.paciente.nombresPaciente}} {{procedimiento.paciente.apellidosPaciente}}</span>
+  </button>
+</div>
 <div style="margin: 20px;">
   <h1>{{tipo}}</h1>
   <mat-divider></mat-divider>
@@ -5,8 +11,8 @@
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Procedimiento</mat-label>
-      <textarea matInput placeholder="Procedimiento" minlength="3" required [(ngModel)]="procedimiento.procedimiento"
-        (ngModelChange)="validarInput()"></textarea>
+      <textarea matInput placeholder="Procedimiento" minlength="3" required
+        [(ngModel)]="procedimiento.procedimiento"></textarea>
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
@@ -14,8 +20,7 @@
       <mtx-datetimepicker #datetimePickerFechaInicio [type]="type" [mode]="mode" [multiYearSelector]="true"
         [startView]="startView" [twelvehour]="true" [timeInterval]="1" [touchUi]="false"
         [timeInput]="true"></mtx-datetimepicker>
-      <input [mtxDatetimepicker]="datetimePickerFechaInicio" [formControl]="datetimeFechaInicio" matInput required
-        (ngModelChange)="validarInput()">
+      <input [mtxDatetimepicker]="datetimePickerFechaInicio" [formControl]="datetimeFechaInicio" matInput required>
       <mtx-datetimepicker-toggle [for]="datetimePickerFechaInicio" matSuffix></mtx-datetimepicker-toggle>
     </mat-form-field>
 
@@ -24,14 +29,20 @@
       <mtx-datetimepicker #datetimePickerFechaFin [type]="type" [mode]="mode" [multiYearSelector]="true"
         [startView]="startView" [twelvehour]="true" [timeInterval]="1" [touchUi]="false"
         [timeInput]="true"></mtx-datetimepicker>
-      <input [mtxDatetimepicker]="datetimePickerFechaFin" [formControl]="datetimeFechaFin" matInput required
-        (ngModelChange)="validarInput()">
+      <input [mtxDatetimepicker]="datetimePickerFechaFin" [formControl]="datetimeFechaFin" matInput required>
       <mtx-datetimepicker-toggle [for]="datetimePickerFechaFin" matSuffix></mtx-datetimepicker-toggle>
     </mat-form-field>
 
+    <div *ngIf="edicionPaciente">
+      <section class="example-section">
+        <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esTerminado">Es
+          Terminado</mat-checkbox>
+      </section>
+    </div>
+
   </div>
 
-  <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">
+  <button mat-raised-button color="primary" (click)="operar()">
     <mat-icon>done</mat-icon>
     <span>Aceptar</span>
   </button>

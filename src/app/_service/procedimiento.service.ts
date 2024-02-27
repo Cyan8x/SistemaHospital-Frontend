@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from './generic.service';
 import { Procedimiento } from '../_model/procedimiento';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -52,9 +52,27 @@ export class ProcedimientoService extends GenericService<Procedimiento>{
     return this.http.get<Map<string, number>>(`${this.url}/cantComplTermin/${usuario_id}`);
   }
 
+  verificarCantProcedimientos(usuario_id: number) {
+    return this.cantidadTerminadoPendientePorUsuario(usuario_id)
+      .pipe(
+        map(data => {
+          let cantidadTotal = 0;
+          if (data != null) {
+            for (const clave in data) {
+              if (data.hasOwnProperty(clave)) {
+                const valor = data[clave];
+                cantidadTotal = cantidadTotal + valor;
+              }
+            }
+          }
+          return cantidadTotal > 0;
+        })
+      );
+  }
+
   //PDF
-  generarReporteProcedimientosPaciente(paciente_id: number){
-    return this.http.get(`${this.url}/genReportProced/${paciente_id}`, {responseType: 'blob'});
+  generarReporteProcedimientosPaciente(paciente_id: number) {
+    return this.http.get(`${this.url}/genReportProced/${paciente_id}`, { responseType: 'blob' });
   }
 
   getProcedimientoCambio() {

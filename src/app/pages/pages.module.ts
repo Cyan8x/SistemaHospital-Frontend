@@ -35,6 +35,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { VerReporteComponent } from './asistencia/ver-reporte/ver-reporte.component';
 import { VerReporteProcedimientosComponent } from './paciente-dialog-userview/ver-reporte-procedimientos/ver-reporte-procedimientos.component';
 import { ErrorsDialogComponent } from './errors-dialog/errors-dialog.component';
+import { SuccessMessageDialogComponent } from './success-message-dialog/success-message-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { ErrorsDialogComponent } from './errors-dialog/errors-dialog.component';
     AsistenciaUsuarioComponent,
     VerReporteComponent,
     VerReporteProcedimientosComponent,
-    ErrorsDialogComponent
+    ErrorsDialogComponent,
+    SuccessMessageDialogComponent
   ],
   imports: [
     MaterialModule,

@@ -31,7 +31,16 @@ export class ServerErrorsInterceptor implements HttpInterceptor {
       })).pipe(catchError((err) => {
         //https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
         if (err.status === 400) {
-          this.showErrorDialog(`${err.error.error_description}`); //ERROR 400:
+          if (err.error.hasOwnProperty('error_description')) {
+            this.showErrorDialog(`${err.error.error_description}`);
+          } else if (err.error.hasOwnProperty('message')) {
+            this.showErrorDialog(`${err.error.message}`);
+          } else {
+            const errorMessages = Object.values(err.error.errors) as string[];
+            const errorMessage = errorMessages.join('; ');
+            this.showErrorDialog(errorMessage); //ERROR 400:
+          }
+
         }
         else if (err.status === 404) {
           this.showErrorDialog(`${err.error.error_description}`); //ERROR 404:
@@ -48,18 +57,19 @@ export class ServerErrorsInterceptor implements HttpInterceptor {
       }));
   }
 
-  private verificarTraducirMessage(messageError: string){
-    if(messageError == 'Bad credentials'){
+  private verificarTraducirMessage(messageError: string) {
+    if (messageError == 'Bad credentials') {
       return "Usuario o Contraseña Invalidas";
-    }else{
+    } else {
       return messageError;
     }
   }
 
   private showErrorDialog(messageError: string): void {
     let message = this.verificarTraducirMessage(messageError);
+    let errorMessages = message.split('; ').map(msg => msg.trim());
     this.dialogRef = this.dialog.open(ErrorsDialogComponent, {
-      data: { message },
+      data: errorMessages,
       disableClose: true
     });
   }

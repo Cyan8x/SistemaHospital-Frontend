@@ -10,6 +10,7 @@ import { Rol } from 'src/app/_model/rol';
 import { RolService } from 'src/app/_service/rol.service';
 import { Menu } from 'src/app/_model/menu';
 import { MenuService } from 'src/app/_service/menu.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-usuario-horario',
@@ -59,6 +60,7 @@ export class UsuarioHorarioComponent implements OnInit {
   constructor(private usuarioService: UsuarioService,
     private route: ActivatedRoute,
     private router: Router,
+    private dialog: MatDialog,
     private renderer: Renderer2,
     private menuService: MenuService) {
 
@@ -196,7 +198,7 @@ export class UsuarioHorarioComponent implements OnInit {
       )
       .subscribe((data) => {
         this.usuarioService.setUsuarioCambio(data);
-        this.usuarioService.setMensajeCambio('Se modificó.');
+        this.usuarioService.successMessageDialog("Se asignaron correctamente los horarios al usuario.", this.dialog);
         this.menuService.asignarMenusUsuario(this.usuario.usuario_id,this.menus).subscribe(data=>{
         });
       });

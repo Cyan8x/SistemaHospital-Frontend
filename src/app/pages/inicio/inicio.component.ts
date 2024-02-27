@@ -28,6 +28,8 @@ export class InicioComponent implements OnInit {
   pacientesFavoritos: Observable<Paciente[]>;
   isVacioPacientesFavoritos: boolean;
 
+  esconderGrafico: boolean = false;
+
   textoBoton: string = "Mi Trabajo";
   iconBoton: string = "work"
   mostrarCalendario: boolean = false;
@@ -81,6 +83,7 @@ export class InicioComponent implements OnInit {
       data => {
         this.usuario = data;
         this.usuarioService.setUsuarioLogueado(this.usuario);
+        this.verificarCantPacientesEstado();
         this.listarFavoritos(this.usuario.usuario_id);
         this.definirGrafico();
         this.pacientesFavoritos.pipe(
@@ -105,6 +108,25 @@ export class InicioComponent implements OnInit {
         );
       }
     );
+  }
+
+  verificarCantPacientesEstado() {
+    this.pacienteService.cantidadPacientesPorEstado().subscribe(data => {
+      if (data != null) {
+        let cantidadTotal = 0;
+        for (const clave in data) {
+          if (data.hasOwnProperty(clave)) {
+            const valor = data[clave];
+            cantidadTotal = cantidadTotal + valor;
+          }
+        }
+        if (cantidadTotal > 0) {
+          this.esconderGrafico = false;
+        } else {
+          this.esconderGrafico = true;
+        }
+      }
+    })
   }
 
   definirGrafico() {
@@ -172,9 +194,14 @@ export class InicioComponent implements OnInit {
   }
 
   registrarPacienteDialog() {
-    this.dialog.open(PacienteDialogComponent, {
+    const dialogRef = this.dialog.open(PacienteDialogComponent, {
       width: '50%',
       height: '95%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.verificarCantPacientesEstado();
+      this.definirGrafico();
     });
   }
 }

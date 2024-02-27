@@ -13,6 +13,7 @@ export class PacienteService extends GenericService<Paciente>{
   private pacienteCambio: Subject<Paciente[]> = new Subject<
     Paciente[]
   >();
+
   private mensajeCambio: Subject<string> = new Subject<string>();
 
   constructor(protected override http: HttpClient) {
@@ -21,6 +22,14 @@ export class PacienteService extends GenericService<Paciente>{
 
   selectFavoritosPorUsuario(usuario_id: number) {
     return this.http.get<Paciente[]>(`${this.url}/favoritos/${usuario_id}`);
+  }
+
+  listarPacientesActivos() {
+    return this.http.get<Paciente[]>(`${this.url}/activos`);
+  }
+
+  listarPacientesActivosPagination(p:number, s:number) {
+    return this.http.get<any>(`${this.url}/activosPagination/?page=${p}&size=${s}`);
   }
 
   insertFavoritoPorUsuario(usuario_id: number, paciente_id: number) {

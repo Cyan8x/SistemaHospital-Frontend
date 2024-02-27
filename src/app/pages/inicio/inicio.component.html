@@ -15,7 +15,8 @@
         <mat-card-content style="font-size: 30px; padding: 15px;"><b>Favoritos</b></mat-card-content>
         <mat-divider></mat-divider>
         <mat-nav-list>
-          <div style="padding-left: 15px;" *ngIf="!isVacioPacientesFavoritos, else Favoritos">Aun no tiene Pacientes marcados como Favorito</div>
+          <div style="padding-left: 15px;" *ngIf="!isVacioPacientesFavoritos, else Favoritos">Aun no tiene Pacientes
+            marcados como Favorito</div>
           <ng-template #Favoritos>
             <a mat-list-item *ngFor="let p of (pacientesFavoritos | async)"
               (click)="redireccionarConParametros(p.paciente_id)">{{
@@ -30,8 +31,12 @@
             Atencion</b></mat-card-content>
         <mat-divider></mat-divider>
         <div style="display: flex; justify-content: center;">
-          <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
-            [responsive]="chartOptions.responsive"></apx-chart>
+          <div style="padding: 9px 0;" *ngIf="esconderGrafico, else pacientesEstado">Aun no tiene Pacientes registrados
+          </div>
+          <ng-template #pacientesEstado>
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
+              [responsive]="chartOptions.responsive"></apx-chart>
+          </ng-template>
         </div>
       </mat-card>
     </div>

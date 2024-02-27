@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Paciente } from 'src/app/_model/paciente';
 import { Procedimiento } from 'src/app/_model/procedimiento';
@@ -19,13 +19,14 @@ import { environment } from 'src/environments/environment';
 import { Usuario } from 'src/app/_model/usuario';
 import { VerReporteProcedimientosComponent } from './ver-reporte-procedimientos/ver-reporte-procedimientos.component';
 import { ConfirmarEliminacionDialogComponent } from '../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
+import { FormatDateService } from 'src/app/_service/format-date.service';
 
 @Component({
   selector: 'app-paciente-dialog-userview',
   templateUrl: './paciente-dialog-userview.component.html',
   styleUrls: ['./paciente-dialog-userview.component.css']
 })
-export class PacienteDialogUserviewComponent implements OnInit{
+export class PacienteDialogUserviewComponent implements OnInit, AfterViewChecked{
   paciente: Paciente;
   procedimientos: Procedimiento[];
   procedimientosPendientes: Procedimiento[];
@@ -59,6 +60,7 @@ export class PacienteDialogUserviewComponent implements OnInit{
   @ViewChild('commentContainer') commentContainer: ElementRef;
 
   constructor(
+    private dialogRef: MatDialogRef<PacienteDialogUserviewComponent>,
     @Inject(MAT_DIALOG_DATA) private data: Paciente,
     private procedimientoService: ProcedimientoService,
     private comentarioService: ComentarioService,
@@ -66,7 +68,8 @@ export class PacienteDialogUserviewComponent implements OnInit{
     private snackBar: MatSnackBar,
     private usuarioService: UsuarioService,
     private notificacionService: NotificacionService,
-    private pacienteService: PacienteService
+    private pacienteService: PacienteService,
+    public formatDate: FormatDateService
   ) {
   }
 
@@ -97,6 +100,19 @@ export class PacienteDialogUserviewComponent implements OnInit{
     this.datosComentariosDePaciente();
     this.cantidadProcedimientosTerminados();
     this.habilitarBotonReporte();
+  }
+
+  ngAfterViewChecked(): void {
+    this.irALaUltimaDiv();
+  }
+
+  irALaUltimaDiv(): void {
+    const containerElement = this.commentContainer.nativeElement;
+    const lastChild = containerElement.lastChild.previousElementSibling;
+
+    if (lastChild && lastChild.previousElementSibling) {
+      lastChild.previousElementSibling.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   habilitarBotonReporte(){
@@ -152,13 +168,17 @@ export class PacienteDialogUserviewComponent implements OnInit{
   }
 
   openDialogProcedimiento(procedimiento?: Procedimiento) {
-    this.dialog.open(ProcedimientoDialogComponent, {
+    let dialoRef = this.dialog.open(ProcedimientoDialogComponent, {
       width: '50%',
       height: '90%',
       data: {
         procedimiento: procedimiento,
         paciente: this.paciente
       }
+    });
+
+    dialoRef.afterClosed().subscribe(()=>{
+      this.cantidadProcedimientosTerminados();
     });
   }
 
@@ -174,22 +194,19 @@ export class PacienteDialogUserviewComponent implements OnInit{
   }
 
   procedimientoTerminado(procedimiento: Procedimiento) {
-    let notificacion = new Notificacion();
-    notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-    notificacion.paciente = this.paciente;
-    notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
-    notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
+    let causa = "";
     if (procedimiento.es_terminado) {
       procedimiento.es_terminado = false;
-      notificacion.causa = "Se volvió a abrir un procedimiento";
+      causa = "Se marcó como pendiente un procedimiento";
     } else {
       procedimiento.es_terminado = true;
-      notificacion.causa = "Se volvió a abrir un procedimiento";
+      causa = "Se ha completado un procedimiento";
     }
     this.procedimientoService
       .modificar(procedimiento)
       .pipe(
-        switchMap(() => {
+        switchMap((proced: Procedimiento) => {
+          this.prepararNotificacion(causa, proced);
           if (this.mostrarContenido == 'Mostrar Completados') {
             return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
           }
@@ -200,11 +217,6 @@ export class PacienteDialogUserviewComponent implements OnInit{
         this.procedimientoService.setProcedimientoCambio(data);
         this.procedimientoService.setMensajeCambio('Se modificó.');
         this.cantidadProcedimientosTerminados();
-
-        if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
-          this.notificacionService.registrar(notificacion).subscribe(data => {
-          });
-        }
         this.habilitarBotonReporte();
       });
   }
@@ -234,13 +246,6 @@ export class PacienteDialogUserviewComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let notificacion = new Notificacion();
-        notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-        notificacion.paciente = this.paciente;
-        notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
-        notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
-        notificacion.causa = "Se eliminó un procedimiento";
-
         this.procedimientoService.delete(procedimiento.procedimiento_id).pipe(switchMap(() => {
           if (this.mostrarContenido == 'Mostrar Completados') {
             return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
@@ -251,11 +256,6 @@ export class PacienteDialogUserviewComponent implements OnInit{
             this.procedimientoService.setProcedimientoCambio(data);
             this.procedimientoService.setMensajeCambio('Se eliminó.');
             this.cantidadProcedimientosTerminados();
-
-            if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
-              this.notificacionService.registrar(notificacion).subscribe(data => {
-              });
-            }
             this.habilitarBotonReporte();
           });
       }
@@ -304,4 +304,21 @@ export class PacienteDialogUserviewComponent implements OnInit{
       data: this.pacienteId
     });
   }
+
+  prepararNotificacion(causa:string, procedimiento:Procedimiento){
+    //CREANDO NOTIFICACION
+    let notificacion = new Notificacion();
+    notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+    notificacion.procedimiento = procedimiento;
+    notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
+    notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
+    notificacion.causa = causa;
+    this.notificacionService.registrar(notificacion).subscribe(data => {
+    });
+  }
+
+  cerrar() {
+    this.dialogRef.close();
+  }
+
 }

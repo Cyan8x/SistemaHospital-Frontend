@@ -1,0 +1,18 @@
+.mat-list {
+  border: 3px solid #3f51b5b0;
+  border-radius: 10px;
+  background-color: #3f51b52b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mat-list-item {
+  margin: 10px 0;
+  height: auto !important;
+  padding: 10px 0;
+  width: 95%;
+  border: 3px solid #3f51b5bd;
+  border-radius: 10px;
+  background-color: #ffffff;
+}

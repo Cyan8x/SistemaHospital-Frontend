@@ -4,19 +4,23 @@
   <mat-card-content style="font-size: 30px; background-color: #333854; color: white;">Notificaciones</mat-card-content>
 </mat-card>
 <mat-divider></mat-divider>
-<div style="margin: 30px; display: flex; justify-content: center;">
+<div style="margin: 30px 0; display: flex; justify-content: center;">
   <div style="width: 80%;">
-    <mat-list>
-      <mat-list-item style="height: auto; padding: 10px 0;" *ngFor="let notificacion of notificaciones">
+    <mat-list class="mat-list">
+      <mat-list-item class="mat-list-item" *ngFor="let notificacion of notificaciones">
         <span matListItemTitle>
           <div style="display: flex; justify-content: space-around;   ">
             <div style="display: flex;">
               <div>
-                <a style="text-decoration: none; color: #000; cursor: pointer;" (click)="redireccionarConParametros(notificacion.paciente.paciente_id)">
-                  {{notificacion.causa}}
+                <p style="font-size: 12px;">{{formatDateService.formatDate(notificacion.fechaHoraNotificacion)}}</p>
+                <p style="font-size: 12px;">{{notificacion.causa}}</p>
+                <b><a style="text-decoration: none; color: #000; cursor: pointer;"
+                  (click)="openDialogProcedimiento(notificacion.procedimiento)">
+                  {{notificacion.procedimiento.procedimiento}}
                 </a>
+                </b>
                 <span matListItemLine>Emisor: {{notificacion.usuarioOrigen.usuario}}</span>
-                <span matListItemLine>Paciente: {{notificacion.paciente.nombresPaciente}}</span>
+                <span matListItemLine>Paciente: {{notificacion.procedimiento.paciente.nombresPaciente}}</span>
               </div>
             </div>
             <button mat-fab matTooltip="Primary" color="primary" (click)="marcarNotificacionVisto(notificacion)">
@@ -26,6 +30,7 @@
         </span>
         <mat-divider></mat-divider>
       </mat-list-item>
+      <span>No hay más notificaciones</span>
     </mat-list>
   </div>
 

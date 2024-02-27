@@ -41,7 +41,7 @@ export class AuxurldialogComponent implements OnInit {
   openDialog(paciente: Paciente) {
     const dialogRef = this.dialog.open(PacienteDialogUserviewComponent, {
       width: '100%',
-      height: '100%',
+      height: '95%',
       data: paciente
     });
 

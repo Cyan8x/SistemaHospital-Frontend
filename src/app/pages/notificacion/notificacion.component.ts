@@ -3,10 +3,14 @@ import { NavigationExtras, Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { switchMap } from 'rxjs';
 import { Notificacion } from 'src/app/_model/notificacion';
+import { Procedimiento } from 'src/app/_model/procedimiento';
 import { Usuario } from 'src/app/_model/usuario';
 import { NotificacionService } from 'src/app/_service/notificacion.service';
 import { UsuarioService } from 'src/app/_service/usuario.service';
 import { environment } from 'src/environments/environment';
+import { ProcedimientoDialogComponent } from '../paciente-dialog-userview/procedimiento-dialog/procedimiento-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FormatDateService } from 'src/app/_service/format-date.service';
 
 @Component({
   selector: 'app-notificacion',
@@ -23,6 +27,8 @@ export class NotificacionComponent implements OnInit {
   constructor(
     private notificacionService: NotificacionService,
     private usuarioService: UsuarioService,
+    private dialog: MatDialog,
+    public formatDateService: FormatDateService,
     private router: Router
   ) {
   }
@@ -40,12 +46,14 @@ export class NotificacionComponent implements OnInit {
         this.notificacionService.selectNotificacionesPorUsuario(this.usuario.usuario_id).subscribe(data => {
           this.notificaciones = data;
         });
-      }
-      );
 
-      this.notificacionService.getNotificacionCambio().subscribe((data) => {
-    this.notificaciones = data;
-    });
+        this.notificacionService.getNotificacionCambio().subscribe((data) => {
+          this.notificaciones = data;
+        });
+      }
+    );
+
+
   }
 
   marcarNotificacionVisto(notificacion: Notificacion) {
@@ -65,12 +73,14 @@ export class NotificacionComponent implements OnInit {
       });
   }
 
-  redireccionarConParametros(paciente_id: number) {
-    const currentRoute: NavigationExtras = {
-      state: {
-        urlAnterior: this.router.url
+  openDialogProcedimiento(procedimiento?: Procedimiento) {
+    this.dialog.open(ProcedimientoDialogComponent, {
+      width: '50%',
+      height: '90%',
+      data: {
+        procedimiento: procedimiento,
+        paciente: procedimiento.paciente
       }
-    };
-    this.router.navigate(['/pages/paciente-userview', paciente_id], currentRoute);
+    });
   }
 }

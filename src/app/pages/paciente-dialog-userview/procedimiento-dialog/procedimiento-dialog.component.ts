@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Renderer2 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { Paciente } from 'src/app/_model/paciente';
 import { Procedimiento } from 'src/app/_model/procedimiento';
@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { UsuarioService } from 'src/app/_service/usuario.service';
 import { Notificacion } from 'src/app/_model/notificacion';
 import { NotificacionService } from 'src/app/_service/notificacion.service';
+import { NavigationExtras, Router } from '@angular/router';
 
 
 
@@ -27,9 +28,11 @@ export class ProcedimientoDialogComponent implements OnInit {
   procedimiento: Procedimiento;
   paciente: Paciente;
 
+  esTerminado: boolean = false;
+  edicionPaciente: boolean = false;
+
   tipo: string = 'Registro';
   miInput: string = '';
-  verificar: boolean = true;
 
   type: MtxDatetimepickerType = 'datetime';
   mode: MtxDatetimepickerMode = 'auto';
@@ -47,8 +50,10 @@ export class ProcedimientoDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: any,
     private procedimientoService: ProcedimientoService,
     private renderer: Renderer2,
+    private router: Router,
     private usuarioService: UsuarioService,
-    private notificacionService:NotificacionService) {
+    private notificacionService: NotificacionService,
+    private dialog: MatDialog) {
 
   }
 
@@ -60,6 +65,8 @@ export class ProcedimientoDialogComponent implements OnInit {
       this.tipo = 'Edicion'
       this.datetimeFechaInicio = new UntypedFormControl(this.procedimiento.fechaHoraInicio);
       this.datetimeFechaFin = new UntypedFormControl(this.procedimiento.fechaHoraFin);
+      this.edicionPaciente = true;
+      this.esTerminado = this.procedimiento.es_terminado;
     }
   }
 
@@ -75,65 +82,70 @@ export class ProcedimientoDialogComponent implements OnInit {
     this.procedimiento.es_terminado = false;
     this.procedimiento.usuario_creador = this.usuarioService.getUsuarioLogueado().usuario;
 
-    //CREANDO NOTIFICACION
-    let notificacion = new Notificacion();
-    notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
-    notificacion.paciente = this.paciente;
-    notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
-    notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
+    if (this.procedimiento.fechaHoraFin == 'Invalid date') {
+      this.procedimiento.fechaHoraFin = null;
+    }
+    if (this.procedimiento.fechaHoraInicio == 'Invalid date') {
+      this.procedimiento.fechaHoraInicio = null;
+    }
+
+
 
     if (this.procedimiento != null && this.procedimiento.procedimiento_id > 0) {
-      notificacion.causa = "Se actualizó un procedimiento";
+      this.procedimiento.es_terminado = this.esTerminado;
       //MODIFICAR
       this.procedimientoService
         .modificar(this.procedimiento)
         .pipe(
-          switchMap(() => {
+          switchMap((proced: Procedimiento) => {
+            this.prepararNotificacion("Se actualizó un procedimiento.", proced);
             return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
           })
         )
         .subscribe((data) => {
           this.procedimientoService.setProcedimientoCambio(data);
-          this.procedimientoService.setMensajeCambio('Se modificó.');
-          if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
-            this.notificacionService.registrar(notificacion).subscribe(data=>{
-            });
-          }
+          this.procedimientoService.successMessageDialog("Se modificó procedimiento exitosamente.", this.dialog);
+          this.cerrar();
         });
     } else {
-      notificacion.causa = "Se creó un procedimiento";
       //REGISTRAR
       this.procedimiento.fechaCreacionProced = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
       this.procedimientoService
         .registrar(this.procedimiento)
         .pipe(
-          switchMap(() => {
+          switchMap((proced: Procedimiento) => {
+            this.prepararNotificacion("Se registró un procedimiento.", proced);
             return this.procedimientoService.listarProcedimientosPendientesPorPaciente(this.paciente.paciente_id);
           })
         )
         .subscribe((data) => {
           this.procedimientoService.setProcedimientoCambio(data);
-          this.procedimientoService.setMensajeCambio('Se registró.');
-          if (this.paciente.usuario.usuario_id != this.usuarioService.getUsuarioLogueado().usuario_id) {
-            this.notificacionService.registrar(notificacion).subscribe(data=>{
-            });
-          }
+          this.procedimientoService.successMessageDialog("Se registró procedimiento exitosamente.", this.dialog);
+          this.cerrar();
         });
     }
-
-    this.cerrar();
   }
 
-  validarInput() {
-    if (this.procedimiento.procedimiento.trim() === ''
-      // || this.procedimiento.fechaHoraInicio.trim() === '' ||
-      // this.procedimiento.fechaHoraInicio.trim() === ''
-    ) {
-      this.verificar = true;
-    } else {
-      this.verificar = false;
-    }
+  prepararNotificacion(causa:string, procedimiento:Procedimiento){
+    //CREANDO NOTIFICACION
+    let notificacion = new Notificacion();
+    notificacion.fechaHoraNotificacion = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss');
+    notificacion.procedimiento = procedimiento;
+    notificacion.usuarioOrigen = this.usuarioService.getUsuarioLogueado();
+    notificacion.usuarioDestino = this.paciente.usuario.usuario_id;
+    notificacion.causa = causa;
+    this.notificacionService.registrar(notificacion).subscribe(data => {
+    });
+  }
 
+  redireccionarConParametros(paciente_id: number) {
+    this.cerrar();
+    const currentRoute: NavigationExtras = {
+      state: {
+        urlAnterior: this.router.url
+      }
+    };
+    this.router.navigate(['/pages/paciente-userview', paciente_id], currentRoute);
   }
 
   cerrar() {

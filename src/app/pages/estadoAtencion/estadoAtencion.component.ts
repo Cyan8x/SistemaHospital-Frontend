@@ -9,6 +9,10 @@ import { EstadoAtencion } from 'src/app/_model/estadoAtencion';
 import { EstadoAtencionService } from 'src/app/_service/estadoAtencion.service';
 import { EstadoAtencionEdicionComponent } from './estadoAtencion-edicion/estadoAtencion-edicion.component';
 import { ConfirmarEliminacionDialogComponent } from '../confirmar-eliminacion-dialog/confirmar-eliminacion-dialog.component';
+import { Usuario } from 'src/app/_model/usuario';
+import { UsuarioService } from 'src/app/_service/usuario.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-estadoAtencion',
@@ -20,9 +24,11 @@ export class EstadoAtencionComponent implements OnInit {
   displayedColumns: string[] = [
     'estado_atencion_id',
     'nombreEstadoAtencion',
-    'editar',
-    'eliminar'
+    'editar'
   ];
+
+  usuarioLogueado: string;
+  mostrarEdicion:boolean;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -30,7 +36,8 @@ export class EstadoAtencionComponent implements OnInit {
   constructor(
     private estadoAtencionService: EstadoAtencionService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
@@ -44,6 +51,18 @@ export class EstadoAtencionComponent implements OnInit {
 
     this.estadoAtencionService.listar().subscribe((data) => {
       this.crearTabla(data);
+    });
+
+    const helper = new JwtHelperService();
+    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    const decodedToken = helper.decodeToken(token);
+    this.usuarioLogueado = decodedToken.user_name;
+
+    this.usuarioService.listarPorUsername(this.usuarioLogueado).subscribe(data => {
+      if (data.rol.rol_id != 1) {
+        this.mostrarEdicion = true;
+      }
+
     });
   }
 

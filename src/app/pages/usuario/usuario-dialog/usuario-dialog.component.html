@@ -4,8 +4,7 @@
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Usuario</mat-label>
-      <input matInput placeholder="Usuario" minlength="3" required [(ngModel)]="usuario.usuario"
-        (ngModelChange)="validarInput()">
+      <input matInput placeholder="Usuario" minlength="3" required [(ngModel)]="usuario.usuario">
     </mat-form-field>
 
 
@@ -14,55 +13,50 @@
 
     <mat-form-field class="example-full-width" *ngIf="mostrarInput || tipo == 'Registro'">
       <mat-label>Password</mat-label>
-      <input type="password" matInput placeholder="Password" minlength="3" required [(ngModel)]="passwordUsuario"
-        (ngModelChange)="validarInput()">
+      <input type="password" matInput placeholder="Password" minlength="3" required [(ngModel)]="passwordUsuario">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Nombre</mat-label>
-      <input matInput placeholder="Nombre del Usuario" minlength="3" required [(ngModel)]="usuario.nombresUsuario"
-        (ngModelChange)="validarInput()">
+      <input matInput placeholder="Nombre del Usuario" minlength="3" required [(ngModel)]="usuario.nombresUsuario">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Apellidos</mat-label>
-      <input matInput placeholder="Apellidos del Usuario" minlength="3" required [(ngModel)]="usuario.apellidosUsuario"
-        (ngModelChange)="validarInput()">
+      <input matInput placeholder="Apellidos del Usuario" minlength="3" required [(ngModel)]="usuario.apellidosUsuario">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>DNI</mat-label>
       <input type="number" matInput placeholder="DNI del Usuario" minlength="3" required
-        [(ngModel)]="usuario.dniUsuario" (ngModelChange)="validarInput()">
+        [(ngModel)]="usuario.dniUsuario">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Email</mat-label>
-      <input type="email" matInput placeholder="Email del Usuario" minlength="3" [(ngModel)]="usuario.emailUsuario"
-        (ngModelChange)="validarInput()">
+      <input type="email" matInput placeholder="Email del Usuario" minlength="3" [(ngModel)]="usuario.emailUsuario">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Telefono</mat-label>
       <input type="number" matInput placeholder="Telefono del Usuario" minlength="3"
-        [(ngModel)]="usuario.telefonoUsuario" (ngModelChange)="validarInput()">
+        [(ngModel)]="usuario.telefonoUsuario">
     </mat-form-field>
 
     <section class="example-section">
-      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo"
-        (change)="validarInput()">Es Activo</mat-checkbox>
+      <mat-checkbox class="example-margin" [labelPosition]="'before'" [(ngModel)]="esActivo">Es Activo</mat-checkbox>
     </section>
 
     <mat-form-field>
       <mat-label>Rol</mat-label>
-      <mat-select [(ngModel)]="rolSeleccionado" [(value)]="rolSeleccionado" (ngModelChange)="validarCambio($event)">
+      <mat-select [(ngModel)]="rolSeleccionado" [(value)]="rolSeleccionado">
         <mat-option *ngFor="let rol of roles" [value]="rol">{{ rol.descripcionRol }}</mat-option>
       </mat-select>
     </mat-form-field>
 
   </div>
 
-  <button mat-raised-button color="primary" [disabled]="verificar" (click)="operar()">
+  <button mat-raised-button color="primary" (click)="operar()">
     <mat-icon>done</mat-icon>
     <span>Aceptar</span>
   </button>

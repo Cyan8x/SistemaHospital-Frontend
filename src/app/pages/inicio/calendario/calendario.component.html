@@ -1,7 +1,7 @@
 <mat-card style="margin-top: 15px;">
   <mat-card-content style="font-size: 30px; padding: 15px;"><b>Calendario de Procedimientos</b></mat-card-content>
   <mat-divider></mat-divider>
-  <div style="display: flex; justify-content: center; margin: 15px 0;">
+  <div *ngIf="esconderGrafico" style="display: flex; justify-content: center; margin: 15px 0;">
     <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
       [responsive]="chartOptions.responsive"></apx-chart>
   </div>

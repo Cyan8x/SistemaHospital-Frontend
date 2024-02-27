@@ -19,11 +19,16 @@ export class BuscarComponent implements OnInit {
   dataSource: MatTableDataSource<Paciente>;
   displayedColumns: string[] = [
     'index',
-    'nombreCompletoPaciente',
+    'nombrePaciente',
+    'apellidoPaciente',
     'Documento',
     'estadoAtencion',
     'Acceder'
   ];
+
+  cantidadDatos: number = 0;
+  numPagina: any;
+  sizePagina: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -34,22 +39,27 @@ export class BuscarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.pacienteService.listar().subscribe((data) => {
-      this.crearTabla(data);
-    });
-
-    this.usuarioService.listar().subscribe(data =>{
-      this.usuarios = data;
-    });
+    this.crearTablaPagination();
   }
 
   filtrar(e: any) {
+    if(e.target.value == ''){
+      this.crearTablaPagination();
+    }
     this.dataSource.filter = e.target.value.trim().toLowerCase();
+    this.cantidadDatos = this.dataSource.filteredData.length;
   }
 
   crearTabla(data: Paciente[]) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
+  }
+
+  crearTablaPagination() {
+    this.pacienteService.listarPacientesActivosPagination(this.numPagina,this.sizePagina).subscribe((data) => {
+      this.cantidadDatos = data.totalElements;
+      this.dataSource = new MatTableDataSource(data.content);
+    });
   }
 
   redireccionarConParametros(paciente_id: number) {
@@ -59,5 +69,12 @@ export class BuscarComponent implements OnInit {
       }
     };
     this.router.navigate(['/pages/paciente-userview', paciente_id],currentRoute);
+  }
+
+  mostrarMas(e: any){
+    this.pacienteService.listarPacientesActivosPagination(e.pageIndex, e.pageSize).subscribe(data =>{
+      this.cantidadDatos = data.totalElements;
+      this.dataSource = new MatTableDataSource(data.content);
+    });
   }
 }
